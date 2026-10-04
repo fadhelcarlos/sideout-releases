@@ -69,7 +69,7 @@ jobs:
       - name: Prebuild the Android project
         run: npx expo prebuild --platform android --no-install
 
-      - name: Assemble the release APK (phones: arm64-v8a, armeabi-v7a)
+      - name: "Assemble the release APK (phones: arm64-v8a, armeabi-v7a)"
         run: cd android && ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
 
       - name: Check the signature and name the APK
