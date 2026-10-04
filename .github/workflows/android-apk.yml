@@ -1,0 +1,106 @@
+name: Android APK
+
+# Builds sideout's Android app from the private source (fadhelcarlos/sideout-native) on this public repository's free
+# runners, signs it with sideout's release keystore (the same key for every build, so each APK installs over the last)
+# and, when `release` is set, publishes it here as the latest release: the landing and the in-app updater download
+#   https://github.com/fadhelcarlos/sideout-releases/releases/latest/download/sideout.apk
+# Fire it with: gh workflow run android-apk.yml -R fadhelcarlos/sideout-releases -f release=v<version>-<versionCode>
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Release tag to publish the APK to (empty = artifact only)"
+        required: false
+        default: ""
+      ref:
+        description: "Branch, tag or commit of the private source"
+        required: false
+        default: "main"
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      EXPO_PUBLIC_SUPABASE_URL: https://omdgfdbtymslljrrsiea.supabase.co
+      EXPO_PUBLIC_SUPABASE_KEY: sb_publishable_FofnCfjBG9WxxBeDpBMfOQ_5SdDwGch
+      EXPO_PUBLIC_ORIGIN: https://sideoutpr.com
+      EXPO_NO_TELEMETRY: "1"
+      SIDEOUT_CERT_SHA256: "31721277591581c9e96a98c896541e700b7dce6869a09664484afc98b471325c"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: fadhelcarlos/sideout-native
+          token: ${{ secrets.SRC_TOKEN }}
+          ref: ${{ github.event.inputs.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Restore the release keystore (never printed)
+        env:
+          KS_B64: ${{ secrets.SIDEOUT_KEYSTORE_B64 }}
+          KS_PW: ${{ secrets.SIDEOUT_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.SIDEOUT_KEYSTORE_ALIAS }}
+          KEY_PW: ${{ secrets.SIDEOUT_KEY_PASSWORD }}
+        run: |
+          mkdir -p credentials/android
+          echo "$KS_B64" | base64 -d > credentials/android/sideout-release.jks
+          node -e '
+            const fs = require("fs");
+            fs.writeFileSync("credentials.json", JSON.stringify({ android: { keystore: {
+              keystorePath: "credentials/android/sideout-release.jks",
+              keystorePassword: process.env.KS_PW, keyAlias: process.env.KS_ALIAS, keyPassword: process.env.KEY_PW } } }, null, 2));'
+
+      - name: Prebuild the Android project
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Assemble the release APK (phones: arm64-v8a, armeabi-v7a)
+        run: cd android && ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
+
+      - name: Check the signature and name the APK
+        id: apk
+        run: |
+          set -euo pipefail
+          APK=android/app/build/outputs/apk/release/app-release.apk
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          SHA=$("$BT/apksigner" verify --print-certs "$APK" | sed -n 's/.*SHA-256 digest: *//p' | head -1)
+          WANT=$(echo "$SIDEOUT_CERT_SHA256" | tr -d ' ')
+          if [ "$SHA" != "$WANT" ]; then echo "REFUSED: signed with $SHA, not sideout's key"; exit 1; fi
+          VERSION=$("$BT/aapt2" dump badging "$APK" | sed -n "s/.*versionName='\([^']*\)'.*/\1/p" | head -1)
+          CODE=$("$BT/aapt2" dump badging "$APK" | sed -n "s/.*versionCode='\([^']*\)'.*/\1/p" | head -1)
+          cp "$APK" sideout.apk
+          cp "$APK" "sideout-$VERSION-$CODE.apk"
+          echo "versioned=sideout-$VERSION-$CODE.apk" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+          ls -la sideout*.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.apk.outputs.versioned }}
+          path: ${{ steps.apk.outputs.versioned }}
+          retention-days: 30
+
+      - name: Publish as the latest release
+        if: ${{ github.event.inputs.release != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.event.inputs.release }}"
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$TAG" -R "$GITHUB_REPOSITORY" --latest --title "sideout ${{ steps.apk.outputs.version }} (${{ steps.apk.outputs.code }})" --notes "sideout para Android, firmado con la llave de sideout (SHA-256 $SIDEOUT_CERT_SHA256). Se instala encima de la versión que tienes."
+          gh release upload "$TAG" sideout.apk "${{ steps.apk.outputs.versioned }}" -R "$GITHUB_REPOSITORY" --clobber

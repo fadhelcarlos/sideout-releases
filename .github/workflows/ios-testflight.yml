@@ -1,0 +1,151 @@
+name: iOS TestFlight
+
+# Builds sideout's iPhone app from the private source (fadhelcarlos/sideout-native) on this public repository's free
+# macOS runners and uploads it to TestFlight: `expo prebuild` writes the Xcode project, the app target is signed by hand
+# with the team's distribution certificate and sideout's App Store profile (secrets), and the App Store Connect API key
+# uploads the IPA. Fire it with:
+#   gh workflow run ios-testflight.yml -R fadhelcarlos/sideout-releases -f build=<CFBundleVersion> -f upload=1
+
+on:
+  workflow_dispatch:
+    inputs:
+      build:
+        description: "CFBundleVersion (a whole number above the last build Apple has)"
+        required: true
+      version:
+        description: "CFBundleShortVersionString"
+        required: false
+        default: "1.0.0"
+      upload:
+        description: "1 = upload to TestFlight; 0 = only keep the IPA as an artifact"
+        required: false
+        default: "1"
+      ref:
+        description: "Branch, tag or commit of the private source"
+        required: false
+        default: "main"
+
+permissions:
+  contents: read
+
+jobs:
+  ipa:
+    # Expo SDK 57 needs Swift tools 6.2, i.e. Xcode 26: the macOS 26 image has it
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      EXPO_PUBLIC_SUPABASE_URL: https://omdgfdbtymslljrrsiea.supabase.co
+      EXPO_PUBLIC_SUPABASE_KEY: sb_publishable_FofnCfjBG9WxxBeDpBMfOQ_5SdDwGch
+      EXPO_PUBLIC_ORIGIN: https://sideoutpr.com
+      EXPO_NO_TELEMETRY: "1"
+      CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: fadhelcarlos/sideout-native
+          token: ${{ secrets.SRC_TOKEN }}
+          ref: ${{ github.event.inputs.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Use Xcode 26 (Swift 6.2)
+        run: |
+          X=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$X" ]; then echo "no Xcode 26 on this runner:"; ls /Applications | grep -i xcode; exit 1; fi
+          sudo xcode-select -s "$X"
+          xcodebuild -version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prebuild the iOS project
+        run: |
+          npx expo prebuild --platform ios --no-install
+          cd ios && pod install --repo-update
+          ls -d *.xcworkspace
+
+      - name: Import the signing identity and the profile
+        env:
+          P12_B64: ${{ secrets.IOS_DIST_P12_B64 }}
+          P12_PASSWORD: ${{ secrets.IOS_DIST_P12_PASSWORD }}
+          PROFILE_B64: ${{ secrets.IOS_PROFILE_B64 }}
+        run: |
+          set -euo pipefail
+          KEYCHAIN="$RUNNER_TEMP/build.keychain-db"; KEYPASS="$(uuidgen)"
+          security create-keychain -p "$KEYPASS" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYPASS" "$KEYCHAIN"
+          echo "$P12_B64" | base64 --decode > "$RUNNER_TEMP/dist.p12"
+          security import "$RUNNER_TEMP/dist.p12" -k "$KEYCHAIN" -P "$P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security -T /usr/bin/productbuild
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYPASS" "$KEYCHAIN" > /dev/null
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          rm -f "$RUNNER_TEMP/dist.p12"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          echo "$PROFILE_B64" | base64 --decode > "$RUNNER_TEMP/profile.mobileprovision"
+          security cms -D -i "$RUNNER_TEMP/profile.mobileprovision" > "$RUNNER_TEMP/profile.plist"
+          UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$RUNNER_TEMP/profile.plist")
+          NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" "$RUNNER_TEMP/profile.plist")
+          cp "$RUNNER_TEMP/profile.mobileprovision" "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+          echo "PROFILE_NAME=$NAME" >> "$GITHUB_ENV"
+          echo "profile: $NAME ($UUID)"
+          security find-identity -v -p codesigning "$KEYCHAIN"
+
+      - name: Sign the app target by hand and stamp the build number
+        run: node scripts/ios-sign.mjs "$PROFILE_NAME" "${{ github.event.inputs.build }}" "${{ github.event.inputs.version }}"
+
+      - name: Archive
+        run: |
+          set -o pipefail
+          cd ios
+          WS=$(ls -d *.xcworkspace | head -1); SCHEME="${WS%.xcworkspace}"
+          xcodebuild -workspace "$WS" -scheme "$SCHEME" -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/app.xcarchive" archive 2>&1 | tee "$RUNNER_TEMP/archive.log" | grep -E "error:|Signing Identity|Provisioning Profile|\*\* ARCHIVE" || true
+          grep -q "ARCHIVE SUCCEEDED" "$RUNNER_TEMP/archive.log" || { echo "archive failed; last lines:"; tail -80 "$RUNNER_TEMP/archive.log"; exit 1; }
+
+      - name: Export the IPA
+        run: |
+          set -euo pipefail
+          {
+            echo '<?xml version="1.0" encoding="UTF-8"?>'
+            echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
+            echo '<plist version="1.0"><dict>'
+            echo '<key>method</key><string>app-store-connect</string>'
+            echo '<key>destination</key><string>export</string>'
+            echo '<key>teamID</key><string>APBP8V6275</string>'
+            echo '<key>signingStyle</key><string>manual</string>'
+            echo '<key>uploadSymbols</key><true/>'
+            echo "<key>provisioningProfiles</key><dict><key>com.sideoutpr.app</key><string>$PROFILE_NAME</string></dict>"
+            echo '</dict></plist>'
+          } > "$RUNNER_TEMP/export.plist"
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/export.plist" -exportPath "$RUNNER_TEMP/ipa" 2>&1 | tail -20
+          IPA=$(ls "$RUNNER_TEMP"/ipa/*.ipa | head -1); echo "IPA=$IPA" >> "$GITHUB_ENV"; ls -la "$IPA"
+          cp "$IPA" "$RUNNER_TEMP/sideout-${{ github.event.inputs.version }}-${{ github.event.inputs.build }}.ipa"
+
+      - name: Keep the archive log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-log-${{ github.event.inputs.build }}
+          path: ${{ runner.temp }}/archive.log
+          if-no-files-found: ignore
+
+      - name: Keep the IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: sideout-${{ github.event.inputs.version }}-${{ github.event.inputs.build }}
+          path: ${{ runner.temp }}/sideout-${{ github.event.inputs.version }}-${{ github.event.inputs.build }}.ipa
+
+      - name: Upload to TestFlight
+        if: github.event.inputs.upload == '1'
+        env:
+          ASC_KEY_B64: ${{ secrets.ASC_API_KEY_P8_B64 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/private_keys"
+          echo "$ASC_KEY_B64" | base64 --decode > "$HOME/private_keys/AuthKey_$ASC_KEY_ID.p8"
+          xcrun altool --upload-app -f "$IPA" -t ios --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" 2>&1 | tail -15
