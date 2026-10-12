@@ -22,7 +22,7 @@ const screenshots = steps.filter(s => Object.hasOwn(s, 'takeScreenshot')).map(s 
 assert(screenshots.every(name => typeof name === 'string' && /^\d{2}-[a-z0-9-]+$/.test(name)), 'Screenshot paths must be relative names without traversal');
 assert.deepEqual(screenshots, ["00-player-door","01-player-auth-keyboard","02-player-auth-blank","03-business-door","04-business-auth-keyboard","05-business-auth-blank","06-town-full-list","07-town-search-keyboard","08-town-selected","09-town-reopened","10-town-gesture-dismissed","11-town-close-retained"], 'Expected twelve unique screenshot names in flow order');
 const inputs = steps.filter(s => Object.hasOwn(s, 'inputText')).map(s => s.inputText);
-assert.deepEqual(inputs, ['San Juan']);
+assert.deepEqual(inputs, ['San J']);
 assert.equal(steps.filter(s => s.tapOn === 'Siguiente').length, 1);
 assert(!steps.some(s => ['Entrar', 'Crear cuenta', 'Acepto los términos y la privacidad'].includes(s.tapOn)));
 assert.equal(workflow.jobs.simulator['runs-on'], 'macos-26');
@@ -60,12 +60,16 @@ const onboarding = parseSteps('onboarding-share.yaml', ['12-onboarding-start','1
   '15-share-product-sheet','16-share-ios-targets','17-share-copy-returned']);
 assert.deepEqual(onboarding.filter(s => Object.hasOwn(s, 'inputText')).map(s => s.inputText), [HANDLE, PASSWORD]);
 assert.equal(onboarding.filter(s => s.tapOn === 'Siguiente').length, 5);
-assert(onboarding.some(s => s.tapOn === 'Avísame cuando me toque'));
-assert(onboarding.some(s => s.assertVisible === 'Actívalos en Ajustes del teléfono'));
+assert(onboarding.some(s => s.tapOn === '.*Avísame cuando me toque.*'));
+assert(onboarding.some(s => s.assertVisible === '.*Actívalos en Ajustes del teléfono.*'));
 assert(onboarding.some(s => s.tapOn === 'Compartir'));
 assert(onboarding.some(s => s.tapOn === '^(Copy|Copiar)$'));
-const wall = parseSteps('ios-wall.yaml', ['18-ios-wall-alternatives','19-ios-wall-browser-opened','20-ios-wall-returned']);
+const wall = parseSteps('ios-wall.yaml', ['18-ios-wall-alternatives','18-ios-wall-browser-opening','19-ios-wall-browser-opened']);
 assert(!wall.some(s => Object.hasOwn(s, 'inputText')));
+assert(wall.some(s => s.extendedWaitUntil?.visible === '^Ya tengo cuenta$'));
+const wallHooks = YAML.parseAllDocuments(fs.readFileSync(path.join(dir, 'ios-wall.yaml'), 'utf8'))[0].toJSON().onFlowComplete;
+assert.deepEqual(wallHooks, [{ tapOn: { text: '^(Done|OK|Listo)$', optional: true } },
+  { assertVisible: 'Abrir sideout en el navegador' }, { takeScreenshot: '20-ios-wall-returned' }]);
 assert(wall.some(s => s.assertNotVisible === 'Actualizar'));
 assert(wall.some(s => s.tapOn === 'Abrir sideout en el navegador'));
 assert(!wall.some(s => s.tapOn === 'Escríbenos'));

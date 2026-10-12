@@ -41,23 +41,25 @@ name: Signed-out player and Business town selector
     visible: "Crear cuenta Business"
     timeout: 30000
 - tapOn: "Crear cuenta Business"
-- tapOn: "Sede u organizador"
+# iOS groups glyph, title and subtitle into one accessibility label.
+- tapOn: ".*Sede u organizador.*"
 - tapOn: "Siguiente"
 - assertVisible: "Nombre"
-- tapOn: "Pueblo"
+- tapOn: ".*Pueblo.*"
 - assertVisible: "¿En qué pueblo?"
 - assertVisible: "Busca tu pueblo"
 - takeScreenshot: 06-town-full-list
 - tapOn: "Busca tu pueblo"
-- inputText: "San Juan"
+# Keep the search value distinct from the result row we select.
+- inputText: "San J"
 - assertVisible: "San Juan"
 - takeScreenshot: 07-town-search-keyboard
 - tapOn: "San Juan"
 - assertNotVisible: "¿En qué pueblo?"
 - assertVisible: "Nombre"
-- assertVisible: "San Juan"
+- assertVisible: ".*San Juan.*"
 - takeScreenshot: 08-town-selected
-- tapOn: "San Juan"
+- tapOn: ".*San Juan.*"
 - assertVisible: "¿En qué pueblo?"
 - takeScreenshot: 09-town-reopened
 - swipe:
@@ -66,13 +68,13 @@ name: Signed-out player and Business town selector
     direction: DOWN
 - assertNotVisible: "¿En qué pueblo?"
 - assertVisible: "Nombre"
-- assertVisible: "San Juan"
+- assertVisible: ".*San Juan.*"
 - takeScreenshot: 10-town-gesture-dismissed
-- tapOn: "San Juan"
+- tapOn: ".*San Juan.*"
 - assertVisible: "¿En qué pueblo?"
 - tapOn: "Cerrar"
 - assertNotVisible: "¿En qué pueblo?"
 - assertVisible: "Nombre"
-- assertVisible: "San Juan"
+- assertVisible: ".*San Juan.*"
 - takeScreenshot: 11-town-close-retained
 # No name, email, username, password, terms, sign-in or signup submission occurs.

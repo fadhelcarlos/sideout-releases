@@ -36,8 +36,8 @@ name: Synthetic local onboarding unsupported and native share Copy
 - assertVisible: "Tu PRIME viaja contigo"
 - tapOn: "Siguiente"
 - assertVisible: "Antes de jugar"
-- tapOn: "Avísame cuando me toque"
-- assertVisible: "Actívalos en Ajustes del teléfono"
+- tapOn: ".*Avísame cuando me toque.*"
+- assertVisible: ".*Actívalos en Ajustes del teléfono.*"
 - takeScreenshot: 13-onboarding-unsupported
 - tapOn: "Empezar"
 - extendedWaitUntil:
@@ -47,14 +47,14 @@ name: Synthetic local onboarding unsupported and native share Copy
 - takeScreenshot: 14-onboarding-completed
 - tapOn: "Yo"
 - extendedWaitUntil:
-    visible: "Ajustes"
+    visible: ".*Ajustes.*"
     timeout: 30000
-- tapOn: "Ajustes"
+- tapOn: ".*Ajustes.*"
 - scrollUntilVisible:
     element:
-      text: "Invita a jugar"
+      text: ".*Invita a jugar.*"
     direction: DOWN
-- tapOn: "Invita a jugar"
+- tapOn: ".*Invita a jugar.*"
 - assertVisible: "Compartir"
 - takeScreenshot: 15-share-product-sheet
 # This is the actual OS share action, not the product's copy-link row.
@@ -64,7 +64,7 @@ name: Synthetic local onboarding unsupported and native share Copy
     timeout: 15000
 - takeScreenshot: 16-share-ios-targets
 - tapOn: "^(Copy|Copiar)$"
-- assertVisible: "Invita a jugar"
+- assertVisible: ".*Invita a jugar.*"
 - takeScreenshot: 17-share-copy-returned
 # Runner reads only this newly-created Simulator's pasteboard and requires the
 # exact joined text+URL. No contact or external share target receives a message.

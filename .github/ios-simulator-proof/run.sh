@@ -68,6 +68,11 @@ test -n "$APP_PATH"
 test "$(printf '%s\n' "$APP_PATH" | wc -l | tr -d ' ')" = 1
 export APP_PATH
 node "$TASK_DIR/simulator-metadata.cjs" app "$APP_PATH" "$EVIDENCE_DIR"
+# Retain this unsigned, local-backend app for separately reviewed UI-only replays.
+# The existing evidence artifact carries its source/bundle hashes and archive digest.
+phase preserve-simulator-app
+ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$EVIDENCE_DIR/simulator-app.zip"
+(cd "$EVIDENCE_DIR" && shasum -a 256 simulator-app.zip > simulator-app.zip.sha256)
 xcrun simctl install "$SIM_ID" "$APP_PATH"
 phase local-backend
 node "$TASK_DIR/local-backend.cjs" init "$EVIDENCE_DIR"

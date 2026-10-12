@@ -1,5 +1,12 @@
 appId: com.sideoutpr.app
 name: Local forced iOS floor and real browser alternative
+# Completion runs after pass or failure, preserving return evidence when CI cannot load the page.
+onFlowComplete:
+  - tapOn:
+      text: "^(Done|OK|Listo)$"
+      optional: true
+  - assertVisible: "Abrir sideout en el navegador"
+  - takeScreenshot: 20-ios-wall-returned
 ---
 # Only the runner-local ll_native_release response was changed. No production
 # floor, TestFlight state, account or provider is modified.
@@ -18,8 +25,12 @@ name: Local forced iOS floor and real browser alternative
 - extendedWaitUntil:
     visible: ".*sideoutpr.com.*"
     timeout: 30000
+# Opening the system browser alone is partial evidence; this frame preserves it.
+- takeScreenshot: 18-ios-wall-browser-opening
+# NativeAuth exposes this operational button on a fresh, signed-out /app page.
+# A timeout leaves content recovery unproven; it is not itself a product defect.
+- extendedWaitUntil:
+    visible: "^Ya tengo cuenta$"
+    timeout: 30000
 - takeScreenshot: 19-ios-wall-browser-opened
-# The Simulator's system web view is read-only here; no page form is entered.
-- tapOn: "^(Done|OK|Listo)$"
-- assertVisible: "Abrir sideout en el navegador"
-- takeScreenshot: 20-ios-wall-returned
+# No web form is entered or submitted.

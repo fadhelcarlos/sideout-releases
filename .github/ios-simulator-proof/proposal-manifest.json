@@ -13,11 +13,11 @@
     },
     {
       "name": "auth-town.yaml",
-      "sha256": "6660e3e7ef27cf73cc78cc9a9c5f5a533ce48b4e6acf651a8403b2e23ad7556e"
+      "sha256": "767f5b6f01b0f425b35456617094a8ddcf12b73487a3549bf8b55715a5ec3082"
     },
     {
       "name": "run.sh",
-      "sha256": "fdb81cd9dd2b202c3772887694bde15eabebdc27ebf8a1743f860d2ed6963034"
+      "sha256": "a58b48010954928fdc140f594108a29eb62dc2a1fbe0deace746d94e0ca78032"
     },
     {
       "name": "simulator-metadata.cjs",
@@ -25,7 +25,7 @@
     },
     {
       "name": "verify-proposal.cjs",
-      "sha256": "782858d3fb22b36f59e9a46f1f4759b7b112a8c0fe4617acd2973265b9d87536"
+      "sha256": "53c131b8c5f3d3cfbd38c13da31366dca4d34f116b950fca37ba59e307d9eebb"
     },
     {
       "name": "local-backend.cjs",
@@ -33,15 +33,15 @@
     },
     {
       "name": "onboarding-share.yaml",
-      "sha256": "f6e1eb861f0b65d503c612da0ad01694f38383810910b15237cd484479c65f30"
+      "sha256": "e004161bf7508bcf9f44517dd0a0563d16103e24887d3f0ae8962c6273654c74"
     },
     {
       "name": "ios-wall.yaml",
-      "sha256": "a2d634a291fadb9ae4b4a9337c3035aa2fe37f93f0939e2a654a9a873b762153"
+      "sha256": "c5a03503ac561ba9a6ee3a9c1de40922f69992d448698c6fabb1b6dfdc17f8cc"
     }
   ],
-  "revisedAt": "2026-10-12T19:44:24.182Z",
-  "revision": "Local-backend Simulator: preserved blank auth/town, synthetic onboarding unsupported, real OS Copy, forced local iOS floor/browser alternative; no product instrumentation",
+  "revisedAt": "2026-10-12T21:23:39.183Z",
+  "revision": "Grouped-label selector repair and retained Simulator app; browser recovery waits for the real player door while completion preserves OS return on content failure.",
   "version": "1.0.28",
   "build": "10029",
   "backend": "http://127.0.0.1:8787",
