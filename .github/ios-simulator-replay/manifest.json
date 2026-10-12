@@ -74,6 +74,10 @@
     {
       "path": "copy.yaml",
       "sha256": "3f241c72fad5bddb9fb1cb238bae35cf25a02f769c8b35e89bb3f21467d87057"
+    },
+    {
+      "path": "../workflows/ios-simulator-proof.yml",
+      "sha256": "7f7f9f693199030ac3f1b47de28e95c5b71fbc162aa50692eccb0bcb2ccd6177"
     }
   ],
   "unchangedInputs": [

@@ -1,60 +1,52 @@
-name: iOS Simulator local-backend bounded proof
-
-# Proposal only. Install this file in sideout-releases/.github/workflows after review.
-# Copy the other executable proposal files into .github/ios-simulator-proof.
+name: iOS Simulator cached 10029 unmet proof
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
+  actions: read
 jobs:
-  simulator:
+  replay:
     runs-on: macos-26
     env:
-      SOURCE_SHA: eeceb6b3c8caa77841b78ab693a468dc6e2d84d5
-      EXPO_PUBLIC_SUPABASE_URL: http://127.0.0.1:8787
-      EXPO_PUBLIC_SUPABASE_KEY: sideout-simulator-local-public-key
-      EXPO_PUBLIC_ORIGIN: https://sideoutpr.com
-      EXPO_NO_TELEMETRY: "1"
       CI: "1"
+      EXPO_NO_TELEMETRY: "1"
     steps:
-      - name: Check out reviewed proof assets
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           path: runner
-          persist-credentials: false
-      - name: Check out exact native source
-        uses: actions/checkout@v4
-        with:
-          repository: fadhelcarlos/sideout-native
-          token: ${{ secrets.SRC_TOKEN }}
-          ref: eeceb6b3c8caa77841b78ab693a468dc6e2d84d5
-          path: source
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: source/package-lock.json
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
-      - name: Build unsigned Simulator app and run bounded UI flow
-        shell: bash
-        run: bash runner/.github/ios-simulator-proof/run.sh source "$RUNNER_TEMP/sideout-ios-proof"
-      - name: Preserve evidence even when a step fails
+      - name: Verify and retrieve the exact retained Simulator app
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node runner/.github/ios-simulator-replay/download.cjs "$RUNNER_TEMP/sideout-ios-cached-replay"
+      - name: Replay only town, onboarding and native Copy independently
+        run: bash runner/.github/ios-simulator-replay/run.sh "$RUNNER_TEMP/sideout-ios-cached-replay"
+      - name: Preserve this replay under its own run identity
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-simulator-local-${{ github.run_id }}
-          path: ${{ runner.temp }}/sideout-ios-proof
+          name: ios-cached-unmet-10029-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/sideout-ios-cached-replay/**
+            !${{ runner.temp }}/sideout-ios-cached-replay/inherited/**
+            !${{ runner.temp }}/sideout-ios-cached-replay/app/**
+            !${{ runner.temp }}/sideout-ios-cached-replay/source-artifact.zip
           if-no-files-found: error
-      - name: Shut down only this job's newly created Simulator
+      - name: Shut down only Simulators created by this replay
         if: always()
         shell: bash
         run: |
-          if [ -n "${SIDEOUT_SIMULATOR_ID:-}" ]; then
-            xcrun simctl shutdown "$SIDEOUT_SIMULATOR_ID" || true
+          ids="$RUNNER_TEMP/sideout-ios-cached-replay/simulator-ids.txt"
+          if [ -f "$ids" ]; then
+            while IFS= read -r id; do
+              [[ "$id" =~ ^[A-Fa-f0-9-]{36}$ ]] || exit 1
+              xcrun simctl shutdown "$id" || true
+            done < "$ids"
           fi
