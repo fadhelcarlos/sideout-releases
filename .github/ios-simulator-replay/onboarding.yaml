@@ -1,0 +1,41 @@
+appId: com.sideoutpr.app
+name: Cached app unsupported onboarding completes
+---
+- launchApp:
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible: "Ya tengo cuenta"
+    timeout: 30000
+- tapOn: "Ya tengo cuenta"
+- tapOn: "usuario"
+- inputText: "simulator_proof"
+- tapOn: "Contraseña"
+- inputText: "Simulator-Local-Only-42!"
+- hideKeyboard
+- tapOn:
+    text: "Entrar"
+    index: 1
+- extendedWaitUntil:
+    visible: "Esto es sideout"
+    timeout: 30000
+- takeScreenshot: 01-onboarding-start
+- tapOn: "Siguiente"
+- assertVisible: "Tu nivel de ahora"
+- tapOn: "Siguiente"
+- assertVisible: "Juego a juego"
+- tapOn: "Siguiente"
+- assertVisible: "Como quieras jugar"
+- tapOn: "Siguiente"
+- assertVisible: "Tu PRIME viaja contigo"
+- tapOn: "Siguiente"
+- assertVisible: "Antes de jugar"
+- tapOn: ".*Avísame cuando me toque.*"
+- assertVisible: ".*Actívalos en Ajustes del teléfono.*"
+- takeScreenshot: 02-onboarding-unsupported
+- tapOn: "Empezar"
+- extendedWaitUntil:
+    visible: "Yo"
+    timeout: 30000
+- assertNotVisible: "Antes de jugar"
+- takeScreenshot: 03-onboarding-completed

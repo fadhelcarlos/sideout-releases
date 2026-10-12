@@ -1,0 +1,43 @@
+appId: com.sideoutpr.app
+name: Cached app actual iOS Copy target
+---
+# Independent fresh Simulator; only this case's synthetic profile is pre-onboarded.
+- launchApp:
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible: "Ya tengo cuenta"
+    timeout: 30000
+- tapOn: "Ya tengo cuenta"
+- tapOn: "usuario"
+- inputText: "simulator_proof"
+- tapOn: "Contraseña"
+- inputText: "Simulator-Local-Only-42!"
+- hideKeyboard
+- tapOn:
+    text: "Entrar"
+    index: 1
+- extendedWaitUntil:
+    visible: "Yo"
+    timeout: 30000
+- assertNotVisible: "Esto es sideout"
+- tapOn: "Yo"
+- extendedWaitUntil:
+    visible: ".*Ajustes.*"
+    timeout: 30000
+- tapOn: ".*Ajustes.*"
+- scrollUntilVisible:
+    element:
+      text: ".*Invita a jugar.*"
+    direction: DOWN
+- tapOn: ".*Invita a jugar.*"
+- assertVisible: "Compartir"
+- takeScreenshot: 01-share-product-sheet
+- tapOn: "Compartir"
+- extendedWaitUntil:
+    visible: "^(Copy|Copiar)$"
+    timeout: 15000
+- takeScreenshot: 02-share-ios-targets
+- tapOn: "^(Copy|Copiar)$"
+- assertVisible: ".*Invita a jugar.*"
+- takeScreenshot: 03-share-copy-returned

@@ -1,0 +1,101 @@
+{
+  "preparedAt": "2026-10-12T22:43:18.345Z",
+  "repository": "fadhelcarlos/sideout-releases",
+  "sourceRun": 38310576592,
+  "sourceRunner": "59c9dac5733421ae2ab4c938c46cea5cbd781e60",
+  "source": "eeceb6b3c8caa77841b78ab693a468dc6e2d84d5",
+  "artifact": {
+    "id": 11775544660,
+    "name": "ios-simulator-local-38310576592",
+    "bytes": 61529914,
+    "sha256": "476eb1b3b47ff01aae907f1c2f6b393eed36837c25e1e21b30f54029d94a4eca"
+  },
+  "app": {
+    "archiveSha256": "aeb9d8786aabd1e65239eaa7b1338d6ff38c106db6035746133ab1bd6d330e08",
+    "bundleId": "com.sideoutpr.app",
+    "version": "1.0.28",
+    "build": "10029",
+    "source": "eeceb6b3c8caa77841b78ab693a468dc6e2d84d5",
+    "backend": "http://127.0.0.1:8787",
+    "executableSha256": "05442f52b0ca75656f768e89f2995f76dc866f87f8146ef6931204dca3d8c046",
+    "jsBundleSha256": "f059302dd213650bda7fb4287ce88d45d43e2c7ae51d23f60bd09633d53139f6"
+  },
+  "simulator": {
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+    "version": "26.5",
+    "build": "23F77",
+    "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro",
+    "pixels": [
+      1206,
+      2622
+    ],
+    "logicalPoints": [
+      402,
+      874
+    ]
+  },
+  "cases": [
+    "town",
+    "onboarding",
+    "copy"
+  ],
+  "wallReplayed": false,
+  "nativeBuilds": 0,
+  "productionWrites": 0,
+  "files": [
+    {
+      "path": "../workflows/ios-simulator-cached-replay.yml",
+      "sha256": "7f7f9f693199030ac3f1b47de28e95c5b71fbc162aa50692eccb0bcb2ccd6177"
+    },
+    {
+      "path": "download.cjs",
+      "sha256": "24f95114539d00dc25f9c107bb591fe71ba364342300e8329dc472d090f7dc1f"
+    },
+    {
+      "path": "proof.cjs",
+      "sha256": "c779322a0df2e2198b89fc134f4587c326f0816b847dda56858270561c988892"
+    },
+    {
+      "path": "case-backend.cjs",
+      "sha256": "06420254687520bdbc01c1b1d072545e4aa35acafb8d1328d2176a901776af21"
+    },
+    {
+      "path": "run.sh",
+      "sha256": "97e5fab2b6f4f430d6cb019bdd3a40fd4e280e53c65d36b72fb6b61d62f0d580"
+    },
+    {
+      "path": "town.yaml",
+      "sha256": "0787562ebc35c4a5d8dfadb192583389beb397b7884667faacf6b264b9342eae"
+    },
+    {
+      "path": "onboarding.yaml",
+      "sha256": "be52aa0f9a2111d41f6efff173fd7a38d1e7eb639bf77d660b16ede6bf5f1058"
+    },
+    {
+      "path": "copy.yaml",
+      "sha256": "3f241c72fad5bddb9fb1cb238bae35cf25a02f769c8b35e89bb3f21467d87057"
+    }
+  ],
+  "unchangedInputs": [
+    {
+      "path": "../ios-simulator-proof/local-backend.cjs",
+      "sha256": "fb8f0763ffb7064f6b53892f9ae4ba62e48a45ae8a29a4ef3939157a281e36c6"
+    },
+    {
+      "path": "../ios-simulator-proof/simulator-metadata.cjs",
+      "sha256": "5a3dfcc87e7f4a631407564d1e45d44df23a9f35742763f78f4268e6113fed6f"
+    },
+    {
+      "path": "../ios-simulator-proof/proposal-manifest.json",
+      "sha256": "e892e95a61da82cc7ac2c8cb589ba36e03fcdf0533e33d292eba4ac1ea2a8bf8"
+    },
+    {
+      "path": "../workflows/ios-testflight.yml",
+      "sha256": "640c159a15dbc0971db761a86cd52e4aae72daf2d91ffcb3f09efc0d6279ff3d"
+    },
+    {
+      "path": "../workflows/android-apk.yml",
+      "sha256": "e1b7bd91ee509832d7c8b51ec45258731ac5ef17c98100c7e4ae5749fc45c6b3"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+appId: com.sideoutpr.app
+name: Cached app town selection and retained dismissal
+---
+- launchApp:
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible: ".*Tienes una sede u organizas.*"
+    timeout: 30000
+- tapOn: ".*Tienes una sede u organizas.*"
+- tapOn: "Crear cuenta Business"
+- tapOn: ".*Sede u organizador.*"
+- tapOn: "Siguiente"
+- assertVisible: "Nombre"
+- tapOn: ".*Pueblo.*"
+- assertVisible: "¿En qué pueblo?"
+- takeScreenshot: 01-town-full-list
+- tapOn: "Busca tu pueblo"
+- inputText: "San J"
+- assertVisible: "^San J$"
+- takeScreenshot: 02-town-search-keyboard
+# The collected iOS hierarchy exposes only "Bottom Sheet" for the list body.
+# On the bound iPhone16Pro/26.5 geometry, the sole filtered result is at y=53%.
+# Selection is accepted only when the parent form subsequently says San Juan.
+- tapOn:
+    point: "50%,53%"
+- assertNotVisible: "¿En qué pueblo?"
+- assertVisible: "Nombre"
+- assertVisible: ".*San Juan.*"
+- takeScreenshot: 03-town-selected
+- tapOn: ".*San Juan.*"
+- assertVisible: "¿En qué pueblo?"
+- takeScreenshot: 04-town-reopened
+- swipe:
+    from:
+      text: "¿En qué pueblo?"
+    direction: DOWN
+- assertNotVisible: "¿En qué pueblo?"
+- assertVisible: "Nombre"
+- assertVisible: ".*San Juan.*"
+- takeScreenshot: 05-town-gesture-dismissed
+- tapOn: ".*San Juan.*"
+- assertVisible: "¿En qué pueblo?"
+- tapOn: "Cerrar"
+- assertNotVisible: "¿En qué pueblo?"
+- assertVisible: "Nombre"
+- assertVisible: ".*San Juan.*"
+- takeScreenshot: 06-town-close-retained
