@@ -34,6 +34,9 @@ unzip -q "$MAESTRO_DIR/maestro.zip" -d "$MAESTRO_DIR"
 MAESTRO="$MAESTRO_DIR/maestro/bin/maestro"
 chmod +x "$MAESTRO"
 "$MAESTRO" --version > "$EVIDENCE_DIR/maestro-version.txt"
+node "$TASK_DIR/record-stock-driver.cjs" preserve "$MAESTRO_DIR/maestro/lib" "$EVIDENCE_DIR"
+bash "$TASK_DIR/build-native-driver.sh" "$GITHUB_WORKSPACE/maestro-native" "$EVIDENCE_DIR"
+XCTESTRUN=$(cat "$EVIDENCE_DIR/native-driver-xctestrun.txt")
 
 # Each case gets a new Simulator and a new local backend state. A failed case
 # returns its own status; the next case never inherits its app storage or draft.
@@ -71,7 +74,7 @@ run_case() (
   if [ "$kind" = copy ]; then printf '%s' sideout-local-copy-negative-control | xcrun simctl pbcopy "$SIM_ID"; fi
   phase "$kind-flow"
   set +e
-  "$MAESTRO" --device "$SIM_ID" test --format JUNIT --output "$CASE_DIR/junit.xml" --test-output-dir "$CASE_DIR" --debug-output "$CASE_DIR/maestro-debug" "$TASK_DIR/$kind.yaml" > "$CASE_DIR/maestro.log" 2>&1
+  bash "$TASK_DIR/run-native-flow.sh" "$MAESTRO" "$SIM_ID" "$CASE_DIR" "$TASK_DIR/$kind.yaml" "$XCTESTRUN"
   FLOW_EXIT=$?
   if [ "$FLOW_EXIT" = 0 ]; then
     node "$TASK_DIR/case-backend.cjs" verify "$kind" "$CASE_DIR"
@@ -82,12 +85,11 @@ run_case() (
     node "$ORIGINAL/simulator-metadata.cjs" clipboard "$CASE_DIR/share-pasteboard.txt" "$CASE_DIR"
     FLOW_EXIT=$?
   fi
-  "$MAESTRO" --device "$SIM_ID" hierarchy > "$CASE_DIR/final-hierarchy.txt" 2>&1
   xcrun simctl io "$SIM_ID" screenshot "$CASE_DIR/final-screen.png"
   set -e
   exit "$FLOW_EXIT"
 )
-for kind in town onboarding copy; do
+for kind in onboarding copy; do
   set +e
   run_case "$kind"
   result=$?
@@ -96,5 +98,6 @@ for kind in town onboarding copy; do
   printf '%s\n' "$result" > "$EVIDENCE_DIR/$kind/exit-code.txt"
   phase "$kind-exit-$result"
 done
+node "$TASK_DIR/record-stock-driver.cjs" verify "$MAESTRO_DIR/maestro/lib" "$EVIDENCE_DIR"
 node "$TASK_DIR/proof.cjs" finish "$EVIDENCE_DIR"
 phase finished

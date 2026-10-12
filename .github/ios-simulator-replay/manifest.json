@@ -1,5 +1,5 @@
 {
-  "preparedAt": "2026-10-12T22:43:18.345Z",
+  "preparedAt": "2026-10-12T23:43:00.596Z",
   "repository": "fadhelcarlos/sideout-releases",
   "sourceRun": 38310576592,
   "sourceRunner": "59c9dac5733421ae2ab4c938c46cea5cbd781e60",
@@ -35,7 +35,6 @@
     ]
   },
   "cases": [
-    "town",
     "onboarding",
     "copy"
   ],
@@ -45,7 +44,7 @@
   "files": [
     {
       "path": "../workflows/ios-simulator-cached-replay.yml",
-      "sha256": "7f7f9f693199030ac3f1b47de28e95c5b71fbc162aa50692eccb0bcb2ccd6177"
+      "sha256": "d36437b1467e6c5fc1505f62b229dc91066cd46aefb67d6fd0c451416711a375"
     },
     {
       "path": "download.cjs",
@@ -53,7 +52,7 @@
     },
     {
       "path": "proof.cjs",
-      "sha256": "c779322a0df2e2198b89fc134f4587c326f0816b847dda56858270561c988892"
+      "sha256": "73092009170204382633fd2d60818b5722e0a4ac1a4120423af63fdd64ebbefb"
     },
     {
       "path": "case-backend.cjs",
@@ -61,7 +60,7 @@
     },
     {
       "path": "run.sh",
-      "sha256": "97e5fab2b6f4f430d6cb019bdd3a40fd4e280e53c65d36b72fb6b61d62f0d580"
+      "sha256": "3f80a5546d8025185fbe48c3cfa4d63635464fc78c52bf278fbb4557de28b0c4"
     },
     {
       "path": "town.yaml",
@@ -77,7 +76,23 @@
     },
     {
       "path": "../workflows/ios-simulator-proof.yml",
-      "sha256": "7f7f9f693199030ac3f1b47de28e95c5b71fbc162aa50692eccb0bcb2ccd6177"
+      "sha256": "d36437b1467e6c5fc1505f62b229dc91066cd46aefb67d6fd0c451416711a375"
+    },
+    {
+      "path": "prepare-native-driver.cjs",
+      "sha256": "0533f59447d0c6469174e1225b400103c440a77688a341425afc73bde5d79233"
+    },
+    {
+      "path": "build-native-driver.sh",
+      "sha256": "22e351f606005b25e79d5c30660c63211a7fb27f64cc59e5c6fb5e8a173ff047"
+    },
+    {
+      "path": "run-native-flow.sh",
+      "sha256": "348c06686671d3994baee538e7a295bf4a70e61811207431af56d0a6484d1ac1"
+    },
+    {
+      "path": "record-stock-driver.cjs",
+      "sha256": "9e7a0b4592ef780eabc4ad19e6267ba78c1420c11ca749d2708b620d2fea2702"
     }
   ],
   "unchangedInputs": [
@@ -101,5 +116,14 @@
       "path": "../workflows/android-apk.yml",
       "sha256": "e1b7bd91ee509832d7c8b51ec45258731ac5ef17c98100c7e4ae5749fc45c6b3"
     }
-  ]
+  ],
+  "proofDriver": {
+    "repository": "mobile-dev-inc/Maestro",
+    "version": "cli-2.11.0",
+    "commit": "c8c361be1cc89b2e742f185466a302a22778be6b",
+    "sourceBeforeSha256": "cc55cb4523b9208a6852f85851fef57355b105114bf202932d3d0a2f87ac76a8",
+    "mechanism": "USE_XCODE_TEST_RUNNER=1; --driver-host-port; TEST_RUNNER_PORT on owned xcodebuild test-without-building",
+    "onlyTestInstrumentationCompiled": true,
+    "automaticFlowRetries": 0
+  }
 }

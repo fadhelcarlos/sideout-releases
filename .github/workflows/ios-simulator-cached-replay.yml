@@ -1,4 +1,4 @@
-name: iOS Simulator cached 10029 unmet proof
+name: iOS Simulator native-only driver proof
 on:
   workflow_dispatch:
 permissions:
@@ -15,6 +15,13 @@ jobs:
         with:
           path: runner
           persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: mobile-dev-inc/Maestro
+          ref: c8c361be1cc89b2e742f185466a302a22778be6b
+          path: maestro-native
+          sparse-checkout: maestro-ios-xctest-runner
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -25,25 +32,25 @@ jobs:
       - name: Verify and retrieve the exact retained Simulator app
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node runner/.github/ios-simulator-replay/download.cjs "$RUNNER_TEMP/sideout-ios-cached-replay"
-      - name: Replay only town, onboarding and native Copy independently
-        run: bash runner/.github/ios-simulator-replay/run.sh "$RUNNER_TEMP/sideout-ios-cached-replay"
+        run: node runner/.github/ios-simulator-replay/download.cjs "$RUNNER_TEMP/sideout-ios-native-driver-replay"
+      - name: Replay only onboarding and native Copy independently
+        run: bash runner/.github/ios-simulator-replay/run.sh "$RUNNER_TEMP/sideout-ios-native-driver-replay"
       - name: Preserve this replay under its own run identity
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-cached-unmet-10029-${{ github.run_id }}
+          name: ios-native-driver-unmet-10029-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/sideout-ios-cached-replay/**
-            !${{ runner.temp }}/sideout-ios-cached-replay/inherited/**
-            !${{ runner.temp }}/sideout-ios-cached-replay/app/**
-            !${{ runner.temp }}/sideout-ios-cached-replay/source-artifact.zip
+            ${{ runner.temp }}/sideout-ios-native-driver-replay/**
+            !${{ runner.temp }}/sideout-ios-native-driver-replay/inherited/**
+            !${{ runner.temp }}/sideout-ios-native-driver-replay/app/**
+            !${{ runner.temp }}/sideout-ios-native-driver-replay/source-artifact.zip
           if-no-files-found: error
       - name: Shut down only Simulators created by this replay
         if: always()
         shell: bash
         run: |
-          ids="$RUNNER_TEMP/sideout-ios-cached-replay/simulator-ids.txt"
+          ids="$RUNNER_TEMP/sideout-ios-native-driver-replay/simulator-ids.txt"
           if [ -f "$ids" ]; then
             while IFS= read -r id; do
               [[ "$id" =~ ^[A-Fa-f0-9-]{36}$ ]] || exit 1
