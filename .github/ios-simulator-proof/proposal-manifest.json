@@ -1,0 +1,31 @@
+{
+  "preparedAt": "2026-10-12T17:47:21.516Z",
+  "mode": "PROPOSAL ONLY; no dispatch or build",
+  "source": "eb504d5b3ee7f3068d34c9c6be5fd31e1909b3f8",
+  "maestro": {
+    "version": "2.11.0",
+    "assetSha256": "5384593cb4e7a106489e75a821d157dd43f4e438df6bc308b72e82c685e1283a"
+  },
+  "files": [
+    {
+      "name": "ios-simulator-proof.yml",
+      "sha256": "3f62701139e640066113a234d17ddffb7cbbec0d5f798a6aad13c71b7216bf91"
+    },
+    {
+      "name": "auth-town.yaml",
+      "sha256": "d825808b5a7d7e51b5effa0027d180a04ba977417b0a5868b50f19b3f386b3af"
+    },
+    {
+      "name": "run.sh",
+      "sha256": "142171af109412e9ada0ae61e340a264fd18a51e83f359a7d2fcb18ee123a2d6"
+    },
+    {
+      "name": "simulator-metadata.cjs",
+      "sha256": "8af1e33d0e490e3aad97f77f6fa1fbe35348b9a90c3534b502095b7324b8ccf1"
+    },
+    {
+      "name": "verify-proposal.cjs",
+      "sha256": "f1bb3b0bce9e95cfc3125366898965f9ec7dc79a09ce2d535d9d6c39f3c1ccb6"
+    }
+  ]
+}

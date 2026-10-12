@@ -1,0 +1,60 @@
+name: iOS Simulator bounded proof
+
+# Proposal only. Install this file in sideout-releases/.github/workflows after review.
+# Copy the other executable proposal files into .github/ios-simulator-proof.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  simulator:
+    runs-on: macos-26
+    env:
+      SOURCE_SHA: eb504d5b3ee7f3068d34c9c6be5fd31e1909b3f8
+      EXPO_PUBLIC_SUPABASE_URL: https://omdgfdbtymslljrrsiea.supabase.co
+      EXPO_PUBLIC_SUPABASE_KEY: sb_publishable_FofnCfjBG9WxxBeDpBMfOQ_5SdDwGch
+      EXPO_PUBLIC_ORIGIN: https://sideoutpr.com
+      EXPO_NO_TELEMETRY: "1"
+      CI: "1"
+    steps:
+      - name: Check out reviewed proof assets
+        uses: actions/checkout@v4
+        with:
+          path: runner
+          persist-credentials: false
+      - name: Check out exact native source
+        uses: actions/checkout@v4
+        with:
+          repository: fadhelcarlos/sideout-native
+          token: ${{ secrets.SRC_TOKEN }}
+          ref: eb504d5b3ee7f3068d34c9c6be5fd31e1909b3f8
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: source/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Build unsigned Simulator app and run bounded UI flow
+        shell: bash
+        run: bash runner/.github/ios-simulator-proof/run.sh source "$RUNNER_TEMP/sideout-ios-proof"
+      - name: Preserve evidence even when a step fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-eb504d5-${{ github.run_id }}
+          path: ${{ runner.temp }}/sideout-ios-proof
+          if-no-files-found: error
+      - name: Shut down only this job's newly created Simulator
+        if: always()
+        shell: bash
+        run: |
+          if [ -n "${SIDEOUT_SIMULATOR_ID:-}" ]; then
+            xcrun simctl shutdown "$SIDEOUT_SIMULATOR_ID" || true
+          fi
