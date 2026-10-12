@@ -7,13 +7,13 @@ name: Signed-out player and Business town selector
 - extendedWaitUntil:
     visible: "Ya tengo cuenta"
     timeout: 30000
-- takeScreenshot: ${EVIDENCE_DIR}/00-player-door
+- takeScreenshot: 00-player-door
 - tapOn: "Ya tengo cuenta"
 - assertVisible: "usuario"
 - assertVisible: "Contraseña"
-- takeScreenshot: ${EVIDENCE_DIR}/01-player-auth-keyboard
+- takeScreenshot: 01-player-auth-keyboard
 - hideKeyboard
-- takeScreenshot: ${EVIDENCE_DIR}/02-player-auth-blank
+- takeScreenshot: 02-player-auth-blank
 # Relaunch preserves storage; no account was entered or created. NativeAuth's
 # unpersisted screen returns to the welcome door while hasAccount remains absent.
 - stopApp
@@ -25,13 +25,13 @@ name: Signed-out player and Business town selector
     timeout: 30000
 - tapOn: ".*Tienes una sede u organizas.*"
 - assertVisible: "Ya tengo cuenta Business"
-- takeScreenshot: ${EVIDENCE_DIR}/03-business-door
+- takeScreenshot: 03-business-door
 - tapOn: "Ya tengo cuenta Business"
 - assertVisible: "tu@sede.com"
 - assertVisible: "Contraseña"
-- takeScreenshot: ${EVIDENCE_DIR}/04-business-auth-keyboard
+- takeScreenshot: 04-business-auth-keyboard
 - hideKeyboard
-- takeScreenshot: ${EVIDENCE_DIR}/05-business-auth-blank
+- takeScreenshot: 05-business-auth-blank
 # The selected account mode survives; BizAuth's local login screen does not.
 - stopApp
 - launchApp:
@@ -47,19 +47,19 @@ name: Signed-out player and Business town selector
 - tapOn: "Pueblo"
 - assertVisible: "¿En qué pueblo?"
 - assertVisible: "Busca tu pueblo"
-- takeScreenshot: ${EVIDENCE_DIR}/06-town-full-list
+- takeScreenshot: 06-town-full-list
 - tapOn: "Busca tu pueblo"
 - inputText: "San Juan"
 - assertVisible: "San Juan"
-- takeScreenshot: ${EVIDENCE_DIR}/07-town-search-keyboard
+- takeScreenshot: 07-town-search-keyboard
 - tapOn: "San Juan"
 - assertNotVisible: "¿En qué pueblo?"
 - assertVisible: "Nombre"
 - assertVisible: "San Juan"
-- takeScreenshot: ${EVIDENCE_DIR}/08-town-selected
+- takeScreenshot: 08-town-selected
 - tapOn: "San Juan"
 - assertVisible: "¿En qué pueblo?"
-- takeScreenshot: ${EVIDENCE_DIR}/09-town-reopened
+- takeScreenshot: 09-town-reopened
 - swipe:
     from:
       text: "¿En qué pueblo?"
@@ -67,12 +67,12 @@ name: Signed-out player and Business town selector
 - assertNotVisible: "¿En qué pueblo?"
 - assertVisible: "Nombre"
 - assertVisible: "San Juan"
-- takeScreenshot: ${EVIDENCE_DIR}/10-town-gesture-dismissed
+- takeScreenshot: 10-town-gesture-dismissed
 - tapOn: "San Juan"
 - assertVisible: "¿En qué pueblo?"
 - tapOn: "Cerrar"
 - assertNotVisible: "¿En qué pueblo?"
 - assertVisible: "Nombre"
 - assertVisible: "San Juan"
-- takeScreenshot: ${EVIDENCE_DIR}/11-town-close-retained
+- takeScreenshot: 11-town-close-retained
 # No name, email, username, password, terms, sign-in or signup submission occurs.

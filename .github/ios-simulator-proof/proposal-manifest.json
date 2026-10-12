@@ -1,7 +1,7 @@
 {
   "preparedAt": "2026-10-12T17:47:21.516Z",
-  "mode": "PROPOSAL ONLY; no dispatch or build",
-  "source": "eb504d5b3ee7f3068d34c9c6be5fd31e1909b3f8",
+  "mode": "Parent-bound local-backend Simulator proof; no distribution artifact",
+  "source": "eeceb6b3c8caa77841b78ab693a468dc6e2d84d5",
   "maestro": {
     "version": "2.11.0",
     "assetSha256": "5384593cb4e7a106489e75a821d157dd43f4e438df6bc308b72e82c685e1283a"
@@ -9,23 +9,51 @@
   "files": [
     {
       "name": "ios-simulator-proof.yml",
-      "sha256": "3f62701139e640066113a234d17ddffb7cbbec0d5f798a6aad13c71b7216bf91"
+      "sha256": "20127db91bac8504247d1f46a3735cc856bb60a10f36ac77a1ccdd4d5fe7a5a5"
     },
     {
       "name": "auth-town.yaml",
-      "sha256": "d825808b5a7d7e51b5effa0027d180a04ba977417b0a5868b50f19b3f386b3af"
+      "sha256": "6660e3e7ef27cf73cc78cc9a9c5f5a533ce48b4e6acf651a8403b2e23ad7556e"
     },
     {
       "name": "run.sh",
-      "sha256": "142171af109412e9ada0ae61e340a264fd18a51e83f359a7d2fcb18ee123a2d6"
+      "sha256": "fdb81cd9dd2b202c3772887694bde15eabebdc27ebf8a1743f860d2ed6963034"
     },
     {
       "name": "simulator-metadata.cjs",
-      "sha256": "8af1e33d0e490e3aad97f77f6fa1fbe35348b9a90c3534b502095b7324b8ccf1"
+      "sha256": "5a3dfcc87e7f4a631407564d1e45d44df23a9f35742763f78f4268e6113fed6f"
     },
     {
       "name": "verify-proposal.cjs",
-      "sha256": "f1bb3b0bce9e95cfc3125366898965f9ec7dc79a09ce2d535d9d6c39f3c1ccb6"
+      "sha256": "782858d3fb22b36f59e9a46f1f4759b7b112a8c0fe4617acd2973265b9d87536"
+    },
+    {
+      "name": "local-backend.cjs",
+      "sha256": "fb8f0763ffb7064f6b53892f9ae4ba62e48a45ae8a29a4ef3939157a281e36c6"
+    },
+    {
+      "name": "onboarding-share.yaml",
+      "sha256": "f6e1eb861f0b65d503c612da0ad01694f38383810910b15237cd484479c65f30"
+    },
+    {
+      "name": "ios-wall.yaml",
+      "sha256": "a2d634a291fadb9ae4b4a9337c3035aa2fe37f93f0939e2a654a9a873b762153"
+    }
+  ],
+  "revisedAt": "2026-10-12T19:44:24.182Z",
+  "revision": "Local-backend Simulator: preserved blank auth/town, synthetic onboarding unsupported, real OS Copy, forced local iOS floor/browser alternative; no product instrumentation",
+  "version": "1.0.28",
+  "build": "10029",
+  "backend": "http://127.0.0.1:8787",
+  "distributionArtifact": false,
+  "immutableDistributionWorkflows": [
+    {
+      "name": "android-apk.yml",
+      "sha256": "e1b7bd91ee509832d7c8b51ec45258731ac5ef17c98100c7e4ae5749fc45c6b3"
+    },
+    {
+      "name": "ios-testflight.yml",
+      "sha256": "640c159a15dbc0971db761a86cd52e4aae72daf2d91ffcb3f09efc0d6279ff3d"
     }
   ]
 }

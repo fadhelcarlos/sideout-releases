@@ -1,0 +1,25 @@
+appId: com.sideoutpr.app
+name: Local forced iOS floor and real browser alternative
+---
+# Only the runner-local ll_native_release response was changed. No production
+# floor, TestFlight state, account or provider is modified.
+- stopApp
+- launchApp:
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible: "Abrir sideout en el navegador"
+    timeout: 30000
+- assertVisible: "Esta versión ya no se puede conectar. Escríbenos si no puedes actualizar."
+- assertVisible: "Escríbenos"
+- assertNotVisible: "Actualizar"
+- takeScreenshot: 18-ios-wall-alternatives
+- tapOn: "Abrir sideout en el navegador"
+- extendedWaitUntil:
+    visible: ".*sideoutpr.com.*"
+    timeout: 30000
+- takeScreenshot: 19-ios-wall-browser-opened
+# The Simulator's system web view is read-only here; no page form is entered.
+- tapOn: "^(Done|OK|Listo)$"
+- assertVisible: "Abrir sideout en el navegador"
+- takeScreenshot: 20-ios-wall-returned

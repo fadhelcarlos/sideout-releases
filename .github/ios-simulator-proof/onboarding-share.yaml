@@ -1,0 +1,70 @@
+appId: com.sideoutpr.app
+name: Synthetic local onboarding unsupported and native share Copy
+---
+# The preceding auth-town flow leaves an unsent Business draft. A real relaunch
+# returns to Business's door, whose top-left arrow switches to the player door.
+- stopApp
+- launchApp:
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible: "Crear cuenta Business"
+    timeout: 30000
+- tapOn:
+    point: "8%,9%"
+- assertVisible: "Ya tengo cuenta"
+- tapOn: "Ya tengo cuenta"
+- tapOn: "usuario"
+- inputText: "simulator_proof"
+- tapOn: "Contraseña"
+- inputText: "Simulator-Local-Only-42!"
+- hideKeyboard
+- tapOn:
+    text: "Entrar"
+    index: 1
+- extendedWaitUntil:
+    visible: "Esto es sideout"
+    timeout: 30000
+- takeScreenshot: 12-onboarding-start
+- tapOn: "Siguiente"
+- assertVisible: "Tu nivel de ahora"
+- tapOn: "Siguiente"
+- assertVisible: "Juego a juego"
+- tapOn: "Siguiente"
+- assertVisible: "Como quieras jugar"
+- tapOn: "Siguiente"
+- assertVisible: "Tu PRIME viaja contigo"
+- tapOn: "Siguiente"
+- assertVisible: "Antes de jugar"
+- tapOn: "Avísame cuando me toque"
+- assertVisible: "Actívalos en Ajustes del teléfono"
+- takeScreenshot: 13-onboarding-unsupported
+- tapOn: "Empezar"
+- extendedWaitUntil:
+    visible: "Yo"
+    timeout: 30000
+- assertNotVisible: "Antes de jugar"
+- takeScreenshot: 14-onboarding-completed
+- tapOn: "Yo"
+- extendedWaitUntil:
+    visible: "Ajustes"
+    timeout: 30000
+- tapOn: "Ajustes"
+- scrollUntilVisible:
+    element:
+      text: "Invita a jugar"
+    direction: DOWN
+- tapOn: "Invita a jugar"
+- assertVisible: "Compartir"
+- takeScreenshot: 15-share-product-sheet
+# This is the actual OS share action, not the product's copy-link row.
+- tapOn: "Compartir"
+- extendedWaitUntil:
+    visible: "^(Copy|Copiar)$"
+    timeout: 15000
+- takeScreenshot: 16-share-ios-targets
+- tapOn: "^(Copy|Copiar)$"
+- assertVisible: "Invita a jugar"
+- takeScreenshot: 17-share-copy-returned
+# Runner reads only this newly-created Simulator's pasteboard and requires the
+# exact joined text+URL. No contact or external share target receives a message.
