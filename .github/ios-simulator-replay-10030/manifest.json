@@ -60,7 +60,7 @@
     },
     {
       "path": "copy.yaml",
-      "sha256": "b704f915ff20edefcf281281026bd8c6b71f0acbc3ac11880ddbaea912c2d13a"
+      "sha256": "4d55caa0c3aea936c9a0f6bc78cb0617e17b0d8c31c01053e2cf925141b11cf0"
     },
     {
       "path": "../workflows/ios-simulator-proof.yml",

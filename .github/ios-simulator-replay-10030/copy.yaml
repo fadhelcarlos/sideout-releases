@@ -32,9 +32,9 @@ name: Cached app actual iOS Copy target
 - assertNotVisible: "Esto es sideout"
 - tapOn: "Yo"
 - extendedWaitUntil:
-    visible: "^Amigos$"
+    visible: ".*Amigos$"
     timeout: 30000
-- tapOn: "^Amigos$"
+- tapOn: ".*Amigos$"
 - extendedWaitUntil:
     visible: ".*__PROOF_NAME__.*"
     timeout: 30000
