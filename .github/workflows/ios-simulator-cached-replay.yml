@@ -35,6 +35,17 @@ jobs:
         run: node runner/.github/ios-simulator-replay/download.cjs "$RUNNER_TEMP/sideout-ios-native-driver-replay"
       - name: Replay only onboarding and native Copy independently
         run: bash runner/.github/ios-simulator-replay/run.sh "$RUNNER_TEMP/sideout-ios-native-driver-replay"
+      - name: Preserve only owned Maestro debug logs including hidden entries
+        if: always()
+        shell: bash
+        run: |
+          for kind in onboarding copy; do
+            case_dir="$RUNNER_TEMP/sideout-ios-native-driver-replay/$kind"
+            if [ -d "$case_dir/maestro-debug" ]; then
+              tar -czf "$case_dir/maestro-debug.tar.gz" -C "$case_dir" maestro-debug
+              shasum -a 256 "$case_dir/maestro-debug.tar.gz" > "$case_dir/maestro-debug.tar.gz.sha256"
+            fi
+          done
       - name: Preserve this replay under its own run identity
         if: always()
         uses: actions/upload-artifact@v4
