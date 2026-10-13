@@ -1,0 +1,167 @@
+{
+  "preparedAt": "2026-10-13T02:48:20.848Z",
+  "repository": "fadhelcarlos/sideout-releases",
+  "source": "a9f79bdd43c3fa1c1ffe7cd6ad4bf091b5a9b4ba",
+  "sourceBindingRequired": true,
+  "app": {
+    "bundleId": "com.sideoutpr.app",
+    "version": "1.0.28",
+    "build": "10030",
+    "source": "a9f79bdd43c3fa1c1ffe7cd6ad4bf091b5a9b4ba",
+    "backend": "http://127.0.0.1:8787"
+  },
+  "simulator": {
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+    "version": "26.5",
+    "build": "23F77",
+    "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro",
+    "pixels": [
+      1206,
+      2622
+    ],
+    "logicalPoints": [
+      402,
+      874
+    ]
+  },
+  "cases": [
+    "onboarding",
+    "copy"
+  ],
+  "townReplayed": false,
+  "wallReplayed": false,
+  "nativeBuilds": 1,
+  "productionWrites": 0,
+  "files": [
+    {
+      "path": "../workflows/ios-simulator-proof.yml",
+      "sha256": "76f1f16f62e4cd317a89ad996901e8e1ff0ce46503cb04de8aa25070105e883d"
+    },
+    {
+      "path": "onboarding.yaml",
+      "sha256": "3cc9ddccd2f1a2ddfcff3ec28f6e241903e92e868048ad97b7664f618cc5acb1"
+    },
+    {
+      "path": "copy.yaml",
+      "sha256": "daea3bff91eb40d8565226782c2ea9df2fe775cc317e265a6bf41aa364ae0444"
+    },
+    {
+      "path": "run.sh",
+      "sha256": "ee0c2e4637deffe85e38f29be5d41f9a0d81133b1d7a28277e5116bb0654f584"
+    },
+    {
+      "path": "metadata.cjs",
+      "sha256": "1401848814c87b0838e3bb00b74f91794ac5c573fa5dcbc420ff3c971a529c08"
+    },
+    {
+      "path": "proof.cjs",
+      "sha256": "0e9ce267894bc98a821fcbc1ea205e93eaa37ae4ca5afadfef2b7558881d7c90"
+    },
+    {
+      "path": "verify.cjs",
+      "sha256": "d0e44157378b620438c828d1cd828c36c8c395a390a49c1524f42a92d8dcd33e"
+    }
+  ],
+  "unchangedInputs": [
+    {
+      "path": "../ios-simulator-replay/case-backend.cjs",
+      "sha256": "06420254687520bdbc01c1b1d072545e4aa35acafb8d1328d2176a901776af21"
+    },
+    {
+      "path": "../ios-simulator-replay/run-native-flow.sh",
+      "sha256": "67c18d04cc1c927ae3869125b9a47d75e94b1aa6d506568a4e95e6314408720a"
+    },
+    {
+      "path": "../ios-simulator-replay/record-stock-driver.cjs",
+      "sha256": "9e7a0b4592ef780eabc4ad19e6267ba78c1420c11ca749d2708b620d2fea2702"
+    },
+    {
+      "path": "../ios-simulator-replay/build-native-driver.sh",
+      "sha256": "22e351f606005b25e79d5c30660c63211a7fb27f64cc59e5c6fb5e8a173ff047"
+    },
+    {
+      "path": "../ios-simulator-replay/prepare-native-driver.cjs",
+      "sha256": "0533f59447d0c6469174e1225b400103c440a77688a341425afc73bde5d79233"
+    },
+    {
+      "path": "../ios-simulator-proof/local-backend.cjs",
+      "sha256": "fb8f0763ffb7064f6b53892f9ae4ba62e48a45ae8a29a4ef3939157a281e36c6"
+    },
+    {
+      "path": "../ios-simulator-proof/simulator-metadata.cjs",
+      "sha256": "5a3dfcc87e7f4a631407564d1e45d44df23a9f35742763f78f4268e6113fed6f"
+    },
+    {
+      "path": "../ios-simulator-proof/proposal-manifest.json",
+      "sha256": "e892e95a61da82cc7ac2c8cb589ba36e03fcdf0533e33d292eba4ac1ea2a8bf8"
+    },
+    {
+      "path": "../workflows/ios-testflight.yml",
+      "sha256": "640c159a15dbc0971db761a86cd52e4aae72daf2d91ffcb3f09efc0d6279ff3d"
+    },
+    {
+      "path": "../workflows/android-apk.yml",
+      "sha256": "e1b7bd91ee509832d7c8b51ec45258731ac5ef17c98100c7e4ae5749fc45c6b3"
+    }
+  ],
+  "proofDriver": {
+    "repository": "mobile-dev-inc/Maestro",
+    "version": "cli-2.11.0",
+    "commit": "c8c361be1cc89b2e742f185466a302a22778be6b",
+    "sourceBeforeSha256": "cc55cb4523b9208a6852f85851fef57355b105114bf202932d3d0a2f87ac76a8",
+    "mechanism": "USE_XCODE_TEST_RUNNER=1; --driver-host-port; TEST_RUNNER_PORT on owned xcodebuild test-without-building",
+    "onlyTestInstrumentationCompiled": true,
+    "automaticFlowRetries": 0
+  },
+  "sourceBindings": [
+    {
+      "path": "app.config.ts",
+      "sha256": "417dbc7b126988bfd7bdeed1937f8c09688691890a8e185a2f7df693fe600f06"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "a84f7c6ea72097cb48578500a1760926ab86976b3f961a9583155b266135305b"
+    },
+    {
+      "path": "index.ts",
+      "sha256": "b34b1801f2fd45e1aec94e8ae118961c2f887768e3ec3b81c801f7fb3ce85242"
+    },
+    {
+      "path": "package.json",
+      "sha256": "fc9bbc362d2c1bf3dac2a0b0c0e8fbb6248bdfe1758cd061fe350a7d2d91bf69"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "453dcd170cb75feeafa5babd4e028604b32774a20f91748ddd993d3d5def7cc6"
+    },
+    {
+      "path": "src/native/auth/NativeAuth.tsx",
+      "sha256": "743be977eccb3f49f5acab8fdd18291d32ea247fc4bbc6412a65e1277724c091"
+    },
+    {
+      "path": "src/native/profile/Settings.tsx",
+      "sha256": "35295d99c6515ad5e880db38e375d169d7a4685eaf52a7d62d4df43420db6d22"
+    },
+    {
+      "path": "src/native/onboarding/Onboarding.tsx",
+      "sha256": "f4654bcd4f8a518ec4ca92f0ab25ebdeb0828371dbb3fad1fe6aa0bdec38b3c7"
+    },
+    {
+      "path": "src/state/session.tsx",
+      "sha256": "93e96de166b81a02b61d16492647c591bebe2b48c0e75aa43d607b27c0811dff"
+    },
+    {
+      "path": "src/ui/ShareSheet.tsx",
+      "sha256": "64b27f3bdf9e62e74092ef50fffa097ba4f105146ffc7269ed387e98c920bb05"
+    },
+    {
+      "path": "src/native/kit.tsx",
+      "sha256": "21706b8da3eede67b089de843fc24890498fd9443ade3b29a292a7302168d6fb"
+    },
+    {
+      "path": "src/lib/push.ts",
+      "sha256": "06ca72f1681ceb7816da33b033544f3737cf3bd99ef12ecd4e5fc53ed4a58b4b"
+    }
+  ],
+  "boundAt": "2026-10-13T03:12:29.770Z"
+}

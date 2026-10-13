@@ -1,19 +1,39 @@
-name: iOS Simulator native-only driver proof
+name: iOS Simulator fresh 10030 unmet proof
 on:
   workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact reviewed native commit bound in the proof manifest
+        required: true
+        type: string
 permissions:
   contents: read
-  actions: read
 jobs:
-  replay:
+  simulator:
     runs-on: macos-26
     env:
-      CI: "1"
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      EXPO_PUBLIC_SUPABASE_URL: http://127.0.0.1:8787
+      EXPO_PUBLIC_SUPABASE_KEY: sideout-simulator-local-public-key
+      EXPO_PUBLIC_ORIGIN: https://sideoutpr.com
       EXPO_NO_TELEMETRY: "1"
+      CI: "1"
     steps:
       - uses: actions/checkout@v4
         with:
           path: runner
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Refuse an unbound or changed source before checkout or compilation
+        run: node runner/.github/ios-simulator-fresh-10030/verify.cjs input
+      - uses: actions/checkout@v4
+        with:
+          repository: fadhelcarlos/sideout-native
+          token: ${{ secrets.SRC_TOKEN }}
+          ref: ${{ inputs.source_sha }}
+          path: source
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
@@ -22,46 +42,36 @@ jobs:
           path: maestro-native
           sparse-checkout: maestro-ios-xctest-runner
           persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
-      - name: Verify and retrieve the exact retained Simulator app
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: node runner/.github/ios-simulator-replay/download.cjs "$RUNNER_TEMP/sideout-ios-native-driver-replay"
-      - name: Replay only onboarding and native Copy independently
-        run: bash runner/.github/ios-simulator-replay/run.sh "$RUNNER_TEMP/sideout-ios-native-driver-replay"
-      - name: Preserve only owned Maestro debug logs including hidden entries
+      - name: Build one unsigned app and run only onboarding and Copy independently
+        shell: bash
+        run: bash runner/.github/ios-simulator-fresh-10030/run.sh source "$RUNNER_TEMP/sideout-ios-fresh-10030"
+      - name: Preserve owned Maestro debug logs including hidden entries
         if: always()
         shell: bash
         run: |
           for kind in onboarding copy; do
-            case_dir="$RUNNER_TEMP/sideout-ios-native-driver-replay/$kind"
+            case_dir="$RUNNER_TEMP/sideout-ios-fresh-10030/$kind"
             if [ -d "$case_dir/maestro-debug" ]; then
               tar -czf "$case_dir/maestro-debug.tar.gz" -C "$case_dir" maestro-debug
               shasum -a 256 "$case_dir/maestro-debug.tar.gz" > "$case_dir/maestro-debug.tar.gz.sha256"
             fi
           done
-      - name: Preserve this replay under its own run identity
+      - name: Preserve this app and evidence under the new run identity
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-native-driver-unmet-10029-${{ github.run_id }}
-          path: |
-            ${{ runner.temp }}/sideout-ios-native-driver-replay/**
-            !${{ runner.temp }}/sideout-ios-native-driver-replay/inherited/**
-            !${{ runner.temp }}/sideout-ios-native-driver-replay/app/**
-            !${{ runner.temp }}/sideout-ios-native-driver-replay/source-artifact.zip
+          name: ios-simulator-fresh-10030-${{ github.run_id }}
+          path: ${{ runner.temp }}/sideout-ios-fresh-10030
           if-no-files-found: error
-      - name: Shut down only Simulators created by this replay
+      - name: Shut down only Simulators created by this proof
         if: always()
         shell: bash
         run: |
-          ids="$RUNNER_TEMP/sideout-ios-native-driver-replay/simulator-ids.txt"
+          ids="$RUNNER_TEMP/sideout-ios-fresh-10030/simulator-ids.txt"
           if [ -f "$ids" ]; then
             while IFS= read -r id; do
               [[ "$id" =~ ^[A-Fa-f0-9-]{36}$ ]] || exit 1

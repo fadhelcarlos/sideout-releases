@@ -1,0 +1,59 @@
+appId: com.sideoutpr.app
+name: Cached app actual iOS Copy target
+---
+# Independent fresh Simulator; only this case's synthetic profile is pre-onboarded.
+- launchApp:
+    permissions:
+      all: deny
+# The fixture enables Business asynchronously. Wait for its final door layout
+# before resolving the player button; never reuse the pre-config coordinates.
+- extendedWaitUntil:
+    visible: ".*Tienes una sede u organizas.*"
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "^Ya tengo cuenta$"
+    timeout: 30000
+- takeScreenshot: 00-configured-player-door
+- tapOn: "^Ya tengo cuenta$"
+- extendedWaitUntil:
+    visible: "^usuario$"
+    timeout: 30000
+- tapOn: "usuario"
+- inputText: "simulator_proof"
+- tapOn: "Contraseña"
+- inputText: "Simulator-Local-Only-42!"
+- hideKeyboard
+- tapOn:
+    text: "Entrar"
+    index: 1
+- extendedWaitUntil:
+    visible: "Yo"
+    timeout: 30000
+- assertNotVisible: "Esto es sideout"
+- tapOn: "Yo"
+- extendedWaitUntil:
+    visible: ".*Ajustes.*"
+    timeout: 30000
+- tapOn: ".*Ajustes.*"
+- scrollUntilVisible:
+    element:
+      text: ".*Invita a jugar.*"
+    direction: DOWN
+- tapOn: ".*Invita a jugar.*"
+- extendedWaitUntil:
+    visible: "^Invita a jugar$"
+    timeout: 30000
+- assertVisible: "^Cerrar$"
+- takeScreenshot: 01-share-product-sheet
+# This retained app exposes the sheet body/footer only as an AX leaf. The
+# collected 1206x2622 image places Compartir at this point on iPhone16Pro.
+# The real iOS Copy target and exact pasteboard check below remain mandatory.
+- tapOn:
+    point: "27%,85%"
+- extendedWaitUntil:
+    visible: "^(Copy|Copiar)$"
+    timeout: 15000
+- takeScreenshot: 02-share-ios-targets
+- tapOn: "^(Copy|Copiar)$"
+- assertVisible: ".*Invita a jugar.*"
+- takeScreenshot: 03-share-copy-returned
