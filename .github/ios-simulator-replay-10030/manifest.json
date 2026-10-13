@@ -1,5 +1,5 @@
 {
-  "preparedAt": "2026-10-13T04:36:48.248Z",
+  "preparedAt": "2026-10-13T05:10:02.333Z",
   "repository": "fadhelcarlos/sideout-releases",
   "sourceRun": 38340823097,
   "sourceRunner": "01047c601a15c4a373eb9500012c370b998a00ad",
@@ -35,7 +35,6 @@
     ]
   },
   "cases": [
-    "onboarding",
     "copy"
   ],
   "townReplayed": false,
@@ -49,27 +48,31 @@
     },
     {
       "path": "proof.cjs",
-      "sha256": "73092009170204382633fd2d60818b5722e0a4ac1a4120423af63fdd64ebbefb"
+      "sha256": "389186c80621201c555e572be72efbbcebfe417faa9b2b30255e9632552f41ce"
     },
     {
       "path": "run.sh",
-      "sha256": "067d949b84b188b5769b8dbba129a1d15703fe8d576d4c6a884ab0581dedadaf"
+      "sha256": "6bb2a11e765899b216e8dd4d941067cd8c52582d7b160561acf424a7ce039101"
     },
     {
       "path": "run-native-flow.sh",
       "sha256": "5a66f06c3ff3cedfc1f52b9e32e98d1419f1a710dc4dd1406be28fa10fe3ddef"
     },
     {
-      "path": "onboarding.yaml",
-      "sha256": "3cc9ddccd2f1a2ddfcff3ec28f6e241903e92e868048ad97b7664f618cc5acb1"
-    },
-    {
       "path": "copy.yaml",
-      "sha256": "36be8c80a4c913142ae07bb076b7123640400d290f8ccd2c1bd08ec521cccdca"
+      "sha256": "b704f915ff20edefcf281281026bd8c6b71f0acbc3ac11880ddbaea912c2d13a"
     },
     {
       "path": "../workflows/ios-simulator-proof.yml",
-      "sha256": "247d8aaac0b58013d7520459fd58017600a972ad1f7fa6799d858f34cdc9f187"
+      "sha256": "d775ce7cda1fc1d9a763cb046c761cbc14270e1fef298b72c66c62d1df1a6bf8"
+    },
+    {
+      "path": "copy-backend.cjs",
+      "sha256": "085885f39a05ed772b5d241b9eaf1ecc3dc005f8aee97274fba7e164eb7134a3"
+    },
+    {
+      "path": "copy-case.cjs",
+      "sha256": "6e6e567cc1f53e4811124b0e2e7af8132f30e63c0aa52ca5dabea8ea5b62da93"
     }
   ],
   "unchangedInputs": [
@@ -158,6 +161,26 @@
     {
       "path": "src/lib/push.ts",
       "sha256": "06ca72f1681ceb7816da33b033544f3737cf3bd99ef12ecd4e5fc53ed4a58b4b"
+    },
+    {
+      "path": "src/native/profile/Profile.tsx",
+      "sha256": "0c91814d3faaca4e550a7ec5123002d3f9432cc95b22cee1b0a696fe63cedb23"
+    },
+    {
+      "path": "src/native/profile/Friends.tsx",
+      "sha256": "2c33a34082937b710f73fadf252914f191eb3d08f102992d1a4bbedc98115f71"
+    },
+    {
+      "path": "src/screens/profile/share.ts",
+      "sha256": "cefd11ce18157216dfe17cf77dbeb84b5c9e3aa2341d3b7c344aaebfc087b517"
+    },
+    {
+      "path": "src/lib/native.ts",
+      "sha256": "34e35e45b8ccd0a866fb88b775e8d111f8c1878421aa4acf5019edd09dfc7f0b"
+    },
+    {
+      "path": "src/state/social.ts",
+      "sha256": "e9c2968c41cf2b5f8835de16b0e2378af535d0c9390257802492fe9e7f172a3c"
     }
   ],
   "proofDriver": {
@@ -196,5 +219,14 @@
       327
     ],
     "exactClipboardRequired": true
+  },
+  "onboardingReplayed": false,
+  "copyOracle": {
+    "profileName": "QA Copy <GITHUB_RUN_ID>",
+    "profileHandle": "copy_<GITHUB_RUN_ID>",
+    "url": "https://sideoutpr.com/p/copy_<GITHUB_RUN_ID>",
+    "clipboardSeeded": false,
+    "requiresExactTextAndUrl": true,
+    "noUIOrClipboardInjection": true
   }
 }

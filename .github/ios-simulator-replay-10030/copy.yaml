@@ -32,16 +32,19 @@ name: Cached app actual iOS Copy target
 - assertNotVisible: "Esto es sideout"
 - tapOn: "Yo"
 - extendedWaitUntil:
-    visible: ".*Ajustes.*"
+    visible: "^Amigos$"
     timeout: 30000
-- tapOn: ".*Ajustes.*"
-- scrollUntilVisible:
-    element:
-      text: ".*Invita a jugar.*"
-    direction: DOWN
-- tapOn: ".*Invita a jugar.*"
+- tapOn: "^Amigos$"
 - extendedWaitUntil:
-    visible: "^Invita a jugar$"
+    visible: ".*__PROOF_NAME__.*"
+    timeout: 30000
+- tapOn: ".*__PROOF_NAME__.*"
+- extendedWaitUntil:
+    visible: ".*Cara a cara.*"
+    timeout: 30000
+- tapOn: ".*Compartir.*"
+- extendedWaitUntil:
+    visible: "^Comparte el perfil$"
     timeout: 30000
 - assertVisible: "^Cerrar$"
 - takeScreenshot: 01-share-product-sheet
@@ -61,4 +64,4 @@ name: Cached app actual iOS Copy target
     point: "17%,89%"
 - takeScreenshot: 03-copy-tapped
 - assertNotVisible: "^(Copy|Copiar)$"
-- assertVisible: ".*Invita a jugar.*"
+- assertVisible: "^Comparte el perfil$"

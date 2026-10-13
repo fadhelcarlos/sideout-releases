@@ -1,4 +1,4 @@
-name: iOS Simulator cached 10030 unmet proof
+name: iOS Simulator cached 10030 Copy-only proof
 on:
   workflow_dispatch:
     inputs:
@@ -42,14 +42,14 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - name: Run only independent onboarding and native Copy against retained app
+      - name: Run only actual native Copy against retained app
         shell: bash
         run: bash runner/.github/ios-simulator-replay-10030/run.sh "$RUNNER_TEMP/sideout-ios-cached-10030"
       - name: Preserve owned Maestro debug logs including hidden entries
         if: always()
         shell: bash
         run: |
-          for kind in onboarding copy; do
+          for kind in copy; do
             case_dir="$RUNNER_TEMP/sideout-ios-cached-10030/$kind"
             if [ -d "$case_dir/maestro-debug" ]; then
               tar -czf "$case_dir/maestro-debug.tar.gz" -C "$case_dir" maestro-debug

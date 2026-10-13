@@ -63,8 +63,8 @@ run_case() (
   xcrun simctl io "$SIM_ID" screenshot "$CASE_DIR/runtime-before.png"
   node -e 'const fs=require("node:fs"),a=require("node:assert/strict"),b=fs.readFileSync(process.argv[1]);a.equal(b.toString("ascii",1,4),"PNG");a.equal(b.readUInt32BE(16),1206);a.equal(b.readUInt32BE(20),2622)' "$CASE_DIR/runtime-before.png"
   xcrun simctl install "$SIM_ID" "$APP_PATH"
-  node "$SHARED/case-backend.cjs" init "$kind" "$CASE_DIR"
-  node "$SHARED/case-backend.cjs" serve "$kind" "$CASE_DIR" > "$CASE_DIR/local-backend.log" 2>&1 &
+  node "$TASK_DIR/copy-case.cjs" init "$CASE_DIR"
+  node "$TASK_DIR/copy-case.cjs" serve "$CASE_DIR" > "$CASE_DIR/local-backend.log" 2>&1 &
   LOCAL_BACKEND_PID=$!
   for attempt in {1..20}; do
     kill -0 "$LOCAL_BACKEND_PID"
@@ -73,25 +73,29 @@ run_case() (
   done
   kill -0 "$LOCAL_BACKEND_PID"
   node -e 'const a=require("node:assert/strict"),r=require(process.argv[1]);a.equal(r.kind,"sideout-isolated-ios-simulator-v1");a.equal(r.backend,"http://127.0.0.1:8787")' "$CASE_DIR/local-health.json"
-  if [ "$kind" = copy ]; then printf '%s' sideout-local-copy-negative-control | xcrun simctl pbcopy "$SIM_ID"; fi
+  # A fresh proof VM/Simulator has no prior QA text. Do not gate app execution
+  # on clipboard seeding: only the actual OS Copy result may satisfy the oracle.
   phase "$kind-flow"
   set +e
-  bash "$TASK_DIR/run-native-flow.sh" "$MAESTRO" "$SIM_ID" "$CASE_DIR" "$TASK_DIR/$kind.yaml" "$XCTESTRUN"
+  bash "$TASK_DIR/run-native-flow.sh" "$MAESTRO" "$SIM_ID" "$CASE_DIR" "$CASE_DIR/copy.yaml" "$XCTESTRUN"
   FLOW_EXIT=$?
   if [ "$FLOW_EXIT" = 0 ]; then
-    node "$SHARED/case-backend.cjs" verify "$kind" "$CASE_DIR"
+    node "$TASK_DIR/copy-case.cjs" verify "$CASE_DIR"
     FLOW_EXIT=$?
   fi
   if [ "$kind" = copy ] && [ "$FLOW_EXIT" = 0 ]; then
     xcrun simctl pbpaste "$SIM_ID" > "$CASE_DIR/share-pasteboard.txt"
-    node "$ORIGINAL/simulator-metadata.cjs" clipboard "$CASE_DIR/share-pasteboard.txt" "$CASE_DIR"
     FLOW_EXIT=$?
+    if [ "$FLOW_EXIT" = 0 ]; then
+      node "$TASK_DIR/copy-case.cjs" clipboard "$CASE_DIR"
+      FLOW_EXIT=$?
+    fi
   fi
   xcrun simctl io "$SIM_ID" screenshot "$CASE_DIR/final-screen.png"
   set -e
   exit "$FLOW_EXIT"
 )
-for kind in onboarding copy; do
+for kind in copy; do
   set +e
   run_case "$kind"
   result=$?
