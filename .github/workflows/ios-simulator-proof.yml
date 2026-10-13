@@ -1,13 +1,14 @@
-name: iOS Simulator fresh 10030 unmet proof
+name: iOS Simulator cached 10030 unmet proof
 on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: Exact reviewed native commit bound in the proof manifest
+        description: Exact source of the retained10030 Simulator app
         required: true
         type: string
 permissions:
   contents: read
+  actions: read
 jobs:
   simulator:
     runs-on: macos-26
@@ -26,15 +27,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Refuse an unbound or changed source before checkout or compilation
-        run: node runner/.github/ios-simulator-fresh-10030/verify.cjs input
-      - uses: actions/checkout@v4
-        with:
-          repository: fadhelcarlos/sideout-native
-          token: ${{ secrets.SRC_TOKEN }}
-          ref: ${{ inputs.source_sha }}
-          path: source
-          persist-credentials: false
+      - name: Retrieve and verify the exact retained10030 app without compilation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node runner/.github/ios-simulator-replay-10030/download.cjs "$RUNNER_TEMP/sideout-ios-cached-10030"
       - uses: actions/checkout@v4
         with:
           repository: mobile-dev-inc/Maestro
@@ -46,32 +42,36 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - name: Build one unsigned app and run only onboarding and Copy independently
+      - name: Run only independent onboarding and native Copy against retained app
         shell: bash
-        run: bash runner/.github/ios-simulator-fresh-10030/run.sh source "$RUNNER_TEMP/sideout-ios-fresh-10030"
+        run: bash runner/.github/ios-simulator-replay-10030/run.sh "$RUNNER_TEMP/sideout-ios-cached-10030"
       - name: Preserve owned Maestro debug logs including hidden entries
         if: always()
         shell: bash
         run: |
           for kind in onboarding copy; do
-            case_dir="$RUNNER_TEMP/sideout-ios-fresh-10030/$kind"
+            case_dir="$RUNNER_TEMP/sideout-ios-cached-10030/$kind"
             if [ -d "$case_dir/maestro-debug" ]; then
               tar -czf "$case_dir/maestro-debug.tar.gz" -C "$case_dir" maestro-debug
               shasum -a 256 "$case_dir/maestro-debug.tar.gz" > "$case_dir/maestro-debug.tar.gz.sha256"
             fi
           done
-      - name: Preserve this app and evidence under the new run identity
+      - name: Preserve replay evidence under this run identity
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-simulator-fresh-10030-${{ github.run_id }}
-          path: ${{ runner.temp }}/sideout-ios-fresh-10030
+          name: ios-simulator-cached-10030-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/sideout-ios-cached-10030
+            !${{ runner.temp }}/sideout-ios-cached-10030/app
+            !${{ runner.temp }}/sideout-ios-cached-10030/inherited
+            !${{ runner.temp }}/sideout-ios-cached-10030/source-artifact.zip
           if-no-files-found: error
       - name: Shut down only Simulators created by this proof
         if: always()
         shell: bash
         run: |
-          ids="$RUNNER_TEMP/sideout-ios-fresh-10030/simulator-ids.txt"
+          ids="$RUNNER_TEMP/sideout-ios-cached-10030/simulator-ids.txt"
           if [ -f "$ids" ]; then
             while IFS= read -r id; do
               [[ "$id" =~ ^[A-Fa-f0-9-]{36}$ ]] || exit 1
