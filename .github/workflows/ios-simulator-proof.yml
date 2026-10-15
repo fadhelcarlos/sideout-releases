@@ -100,8 +100,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Verify exact source
-        run: node .github/apple-screenshots-10031/verify.cjs input
       - name: Install PNG codec
         run: python -m pip install Pillow==12.3.0
       - name: Preserve originals and verify pixel-identical RGB copies

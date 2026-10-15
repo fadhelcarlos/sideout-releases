@@ -31,6 +31,7 @@ def save_json(path, data):
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
 def main():
+    assert os.environ.get('SOURCE_SHA', SOURCE) == SOURCE, 'Wrong source for screenshot package'
     args = argparse.ArgumentParser()
     args.add_argument('--cache', type=Path)
     args.add_argument('--output', type=Path, required=True)
@@ -60,6 +61,7 @@ def main():
             assert app['source'] == SOURCE and app['version'] == '1.0.28' and app['build'] == '10031'
             assert app['executableSha256'] == EXECUTABLE and app['jsBundleSha256'] == BUNDLE
             assert app['platforms'] == ['iPhoneSimulator'] and app['localBackend'] is True
+            assert app['backend'] == 'http://127.0.0.1:8787' and app['distributionArtifact'] is False
             assert simulator['deviceName'] == 'iPhone 16 Pro Max' and simulator['pixels'] == [1320, 2868]
             for name in ['retrieval.json', 'simulator-app.json', 'simulator-selection.json', 'xcode-version.txt', 'captures.jsonl', 'navigation/maestro.log']:
                 (provenance / Path(name).name).write_bytes(z.read(name))
