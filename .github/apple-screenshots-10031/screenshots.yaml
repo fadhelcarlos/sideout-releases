@@ -28,7 +28,7 @@ name: Seven authentic native iOS store screenshots
     env:
       ROUTE: sideout://inicio
 - extendedWaitUntil:
-    visible: '.*Costa Clara.*'
+    visible: '.*Tu PRIME.*'
     timeout: 30000
 - waitForAnimationToEnd:
     timeout: 5000
