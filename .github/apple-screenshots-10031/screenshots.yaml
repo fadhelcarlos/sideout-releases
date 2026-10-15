@@ -23,7 +23,10 @@ name: Seven authentic native iOS store screenshots
     visible: '^Yo$'
     timeout: 30000
 - assertNotVisible: Esto es sideout
-- openLink: sideout://inicio
+- runFlow:
+    file: open-route.yaml
+    env:
+      ROUTE: sideout://inicio
 - extendedWaitUntil:
     visible: '.*Costa Clara.*'
     timeout: 30000
@@ -33,7 +36,10 @@ name: Seven authentic native iOS store screenshots
     file: capture.js
     env:
       SHOT: 01-inicio
-- openLink: sideout://torneos
+- runFlow:
+    file: open-route.yaml
+    env:
+      ROUTE: sideout://torneos
 - extendedWaitUntil:
     visible: '.*Torneito de la costa.*'
     timeout: 30000
@@ -61,7 +67,10 @@ name: Seven authentic native iOS store screenshots
     env:
       SHOT: 03-torneito
 - tapOn: '^Cerrar$'
-- openLink: sideout://ranking
+- runFlow:
+    file: open-route.yaml
+    env:
+      ROUTE: sideout://ranking
 - extendedWaitUntil:
     visible: '.*Lucas Rivera.*'
     timeout: 30000
@@ -71,7 +80,10 @@ name: Seven authentic native iOS store screenshots
     file: capture.js
     env:
       SHOT: 04-ranking
-- openLink: sideout://canchas
+- runFlow:
+    file: open-route.yaml
+    env:
+      ROUTE: sideout://canchas
 - extendedWaitUntil:
     visible: '.*Costa Clara.*'
     timeout: 30000
@@ -81,7 +93,10 @@ name: Seven authentic native iOS store screenshots
     file: capture.js
     env:
       SHOT: 05-canchas
-- openLink: sideout://yo
+- runFlow:
+    file: open-route.yaml
+    env:
+      ROUTE: sideout://yo
 - extendedWaitUntil:
     visible: '.*Lucas Rivera.*'
     timeout: 30000
@@ -92,7 +107,10 @@ name: Seven authentic native iOS store screenshots
     file: capture.js
     env:
       SHOT: 06-perfil
-- openLink: sideout://e/a5310000-0000-4000-8000-000000000101/partidos
+- runFlow:
+    file: open-route.yaml
+    env:
+      ROUTE: sideout://e/a5310000-0000-4000-8000-000000000101/partidos
 - extendedWaitUntil:
     visible: '.*Ronda 1.*'
     timeout: 30000

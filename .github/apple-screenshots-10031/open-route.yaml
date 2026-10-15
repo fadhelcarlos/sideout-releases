@@ -1,0 +1,9 @@
+appId: com.sideoutpr.app
+---
+- openLink: ${ROUTE}
+- runFlow:
+    when:
+      visible: '^Open in .*sideout.*'
+    commands:
+      - tapOn: '^Open$'
+      - assertNotVisible: '^Open in .*sideout.*'
