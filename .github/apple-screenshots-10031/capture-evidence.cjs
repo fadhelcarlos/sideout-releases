@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),crypto=require('node:crypto'),assert=require('node:assert/strict'),http=require('node:http');
 const manifest=require('./manifest.json');
-const names=['01-inicio','02-torneos','03-torneito','04-ranking','05-canchas','06-perfil','07-mesa'];
+const names=['03-torneito']; // Recovery subset; six source-bound originals are preserved from run 38768736368.
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const read=file=>JSON.parse(fs.readFileSync(file,'utf8'));
 const save=(dir,name,data)=>fs.writeFileSync(path.join(dir,name),JSON.stringify(data,null,2)+'\n');
@@ -88,9 +88,9 @@ function finish(dir){
   assert.deepEqual(fs.readdirSync(path.join(dir,'screenshots')).sort(),names.map(x=>x+'.png'));
   for(const record of records){const now=png(path.join(dir,'screenshots',record.file));for(const k of Object.keys(now))assert.deepEqual(now[k],record[k]);}
   const retrieval=read(path.join(dir,'retrieval.json'));
-  save(dir,'screenshot-manifest.json',{observedAt:new Date().toISOString(),source:manifest.source,sourceTree:manifest.sourceTree,version:'1.0.28',build:'10031',bundleId:manifest.app.bundleId,run:process.env.GITHUB_RUN_ID,runner:process.env.GITHUB_SHA,retrieval,simulator:read(path.join(dir,'simulator-selection.json')),xcode:fs.readFileSync(path.join(dir,'xcode-version.txt'),'utf8').trim(),screenshots:records,manualVisualReview:'pending',postProcessing:false,scope:'Actual native iOS Simulator, synthetic loopback backend; no product code changes or App Store submission'});
+  save(dir,'screenshot-manifest.json',{observedAt:new Date().toISOString(),source:manifest.source,sourceTree:manifest.sourceTree,version:'1.0.28',build:'10031',bundleId:manifest.app.bundleId,run:process.env.GITHUB_RUN_ID,runner:process.env.GITHUB_SHA,retrieval,simulator:read(path.join(dir,'simulator-selection.json')),xcode:fs.readFileSync(path.join(dir,'xcode-version.txt'),'utf8').trim(),screenshots:records,expectedScreenshots:names.map(x=>x+'.png'),captureSet:'torneito-recovery',manualVisualReview:'pending',postProcessing:false,scope:'Actual native iOS Simulator, synthetic loopback backend; no product code changes or App Store submission'});
   if(records.some(x=>x.hasAlphaOrTransparency))console.log('RAW_PNG_ALPHA_CHANNEL_PRESENT: preserve originals; verify opacity and prepare pixel-identical RGB delivery copies before upload.');
-  console.log('SEVEN_NATIVE_PNGS_VERIFIED');
+  console.log('TORNEITO_NATIVE_PNG_VERIFIED');
 }
 if(require.main===module){const [mode,dir]=process.argv.slice(2);({retrieve,select,verifyApp,serve,finish})[mode](path.resolve(dir));}
 module.exports={png,names};
