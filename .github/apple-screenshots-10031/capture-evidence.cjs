@@ -73,7 +73,7 @@ function serve(dir){
       const name=JSON.parse(body).name;assert(names.includes(name)&&!capturedNames.has(name),'Each named screenshot must be captured once');
       const file=path.join(out,name+'.png');assert(!fs.existsSync(file));
       const command=['simctl','io',id,'screenshot','--type=png',file];
-      cp.execFileSync('xcrun',command,{timeout:15000});
+      cp.execFileSync('xcrun',command,{timeout:60000});
       const data={...png(file),capturedAt:new Date().toISOString(),simulatorId:id,method:'xcrun simctl io screenshot',command,postProcessing:false};
       fs.appendFileSync(path.join(dir,'captures.jsonl'),JSON.stringify(data)+'\n');
       capturedNames.add(name);res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(data));
