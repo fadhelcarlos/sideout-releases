@@ -64,26 +64,27 @@ function verifyApp(dir){
 function serve(dir){
   const id=fs.readFileSync(path.join(dir,'simulator-id.txt'),'utf8').trim();assert(/^[a-f0-9-]{36}$/i.test(id));
   const out=path.join(dir,'screenshots');fs.mkdirSync(out,{recursive:true});
-  let index=0;
+  const capturedNames=new Set();
   const server=http.createServer((req,res)=>{
     if(req.method==='GET'&&req.url==='/health'){res.end('ready');return;}
     if(req.method!=='POST'||req.url!=='/capture'){res.writeHead(404);res.end();return;}
     let body='';req.on('data',chunk=>{body+=chunk;if(body.length>512)req.destroy();});
     req.on('end',()=>{try{
-      const name=JSON.parse(body).name;assert.equal(name,names[index],'Screenshots must be captured once in required order');
+      const name=JSON.parse(body).name;assert(names.includes(name)&&!capturedNames.has(name),'Each named screenshot must be captured once');
       const file=path.join(out,name+'.png');assert(!fs.existsSync(file));
       const command=['simctl','io',id,'screenshot','--type=png',file];
       cp.execFileSync('xcrun',command,{timeout:15000});
       const data={...png(file),capturedAt:new Date().toISOString(),simulatorId:id,method:'xcrun simctl io screenshot',command,postProcessing:false};
       fs.appendFileSync(path.join(dir,'captures.jsonl'),JSON.stringify(data)+'\n');
-      index++;res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(data));
+      capturedNames.add(name);res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(data));
     }catch(error){res.writeHead(500);res.end(JSON.stringify({error:String(error.message)}));}});
   });
   server.listen(8788,'127.0.0.1',()=>console.log('SIMULATOR_CAPTURE_BROKER_READY'));
 }
 function finish(dir){
   const records=fs.readFileSync(path.join(dir,'captures.jsonl'),'utf8').trim().split('\n').map(JSON.parse);
-  assert.deepEqual(records.map(x=>x.file),names.map(x=>x+'.png'));
+  assert.deepEqual(records.map(x=>x.file).sort(),names.map(x=>x+'.png'));
+  records.sort((a,b)=>a.file.localeCompare(b.file));
   assert.deepEqual(fs.readdirSync(path.join(dir,'screenshots')).sort(),names.map(x=>x+'.png'));
   for(const record of records){const now=png(path.join(dir,'screenshots',record.file));for(const k of Object.keys(now))assert.deepEqual(now[k],record[k]);}
   const retrieval=read(path.join(dir,'retrieval.json'));
@@ -93,3 +94,4 @@ function finish(dir){
 }
 if(require.main===module){const [mode,dir]=process.argv.slice(2);({retrieve,select,verifyApp,serve,finish})[mode](path.resolve(dir));}
 module.exports={png,names};
+

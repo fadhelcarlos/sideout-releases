@@ -49,24 +49,6 @@ name: Seven authentic native iOS store screenshots
     file: capture.js
     env:
       SHOT: 02-torneos
-- tapOn: '^Jugar$'
-- extendedWaitUntil:
-    visible: '^Torneito$'
-    timeout: 10000
-- tapOn: '^Torneito$'
-- tapOn: '.*Pierdes y sales.*'
-- scrollUntilVisible:
-    element:
-      text: '.*Así se juega.*'
-    direction: DOWN
-    centerElement: true
-- waitForAnimationToEnd:
-    timeout: 5000
-- runScript:
-    file: capture.js
-    env:
-      SHOT: 03-torneito
-- tapOn: '^Cerrar$'
 - runFlow:
     file: open-route.yaml
     env:
@@ -120,3 +102,28 @@ name: Seven authentic native iOS store screenshots
     file: capture.js
     env:
       SHOT: 07-mesa
+# iOS exposes this modal's scroll content as one "Bottom Sheet" element.
+# Tap the Torneito segment using its verified position in the real 1320x2868 PNG
+# from capture run 38717092719; leave the default native setup visible.
+- runFlow:
+    file: open-route.yaml
+    env:
+      ROUTE: sideout://torneos
+- extendedWaitUntil:
+    visible: '.*Dobles del viernes.*'
+    timeout: 30000
+- tapOn: '^Jugar$'
+- extendedWaitUntil:
+    visible: '^Cerrar$'
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn:
+    point: '61%,48%'
+- waitForAnimationToEnd:
+    timeout: 5000
+- runScript:
+    file: capture.js
+    env:
+      SHOT: 03-torneito
+
