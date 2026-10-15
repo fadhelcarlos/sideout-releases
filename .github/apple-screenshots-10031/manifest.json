@@ -1,0 +1,41 @@
+{
+  "preparedAt": "2026-10-15T08:51:05.474Z",
+  "repository": "fadhelcarlos/sideout-releases",
+  "source": "6151ee8a341c0e5cffe1a7f4b95ded2f3d004ba7",
+  "sourceTree": "a60f2c9a3af029df5fa727b244ad7fa21706f85b",
+  "app": {
+    "bundleId": "com.sideoutpr.app",
+    "version": "1.0.28",
+    "build": "10031",
+    "backend": "http://127.0.0.1:8787"
+  },
+  "simulator": {
+    "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro-Max",
+    "pixels": [
+      1320,
+      2868
+    ]
+  },
+  "sourceBindings": [
+    {
+      "path": "app.config.ts",
+      "sha256": "7c1b4462bdfb851c0be3ade65bbec475570a5612efd7cd4429336a6950d87b94"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "a84f7c6ea72097cb48578500a1760926ab86976b3f961a9583155b266135305b"
+    },
+    {
+      "path": "index.ts",
+      "sha256": "b34b1801f2fd45e1aec94e8ae118961c2f887768e3ec3b81c801f7fb3ce85242"
+    },
+    {
+      "path": "package.json",
+      "sha256": "fc9bbc362d2c1bf3dac2a0b0c0e8fbb6248bdfe1758cd061fe350a7d2d91bf69"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "453dcd170cb75feeafa5babd4e028604b32774a20f91748ddd993d3d5def7cc6"
+    }
+  ]
+}

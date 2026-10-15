@@ -1,0 +1,51 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const cp = require('node:child_process');
+const assert = require('node:assert/strict');
+const [mode, input, out] = process.argv.slice(2);
+const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'manifest.json'), 'utf8'));
+const { LOCAL_URL, KEY } = require('../ios-simulator-proof/local-backend.cjs');
+const save = (dir, name, data) => fs.writeFileSync(path.join(dir, name), JSON.stringify(data, null, 2) + '\n');
+const sha = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+if (mode === 'config') {
+  const config = JSON.parse(fs.readFileSync(input, 'utf8'));
+  assert.equal(config.version, manifest.app.version);
+  assert.equal(String(config.ios.buildNumber), manifest.app.build);
+  assert.equal(config.ios.bundleIdentifier, 'com.sideoutpr.app');
+  assert.equal(process.env.EXPO_PUBLIC_SUPABASE_URL, LOCAL_URL);
+  assert.equal(process.env.EXPO_PUBLIC_SUPABASE_KEY, KEY);
+  assert.equal(process.env.EXPO_PUBLIC_ORIGIN, 'https://sideoutpr.com');
+  save(out, 'config-boundary.json', { version: config.version, build: String(config.ios.buildNumber), bundleId: config.ios.bundleIdentifier,
+    backend: process.env.EXPO_PUBLIC_SUPABASE_URL, origin: process.env.EXPO_PUBLIC_ORIGIN,
+    localBackend: true, distributionArtifact: false,
+    scope: 'Unsigned local-backend Simulator; synthetic identity only, no production auth or distribution credential.' });
+} else if (mode === 'ats') {
+  const info = JSON.parse(cp.execFileSync('plutil', ['-convert', 'json', '-o', '-', input], { encoding: 'utf8' }));
+  assert.equal(info.NSAppTransportSecurity?.NSAllowsLocalNetworking, true);
+  assert.equal(info.NSAppTransportSecurity?.NSAllowsArbitraryLoads, false);
+  save(out, 'generated-ats.json', { observedAt: new Date().toISOString(), infoPlistSha256: sha(input),
+    ats: info.NSAppTransportSecurity, source: 'Standard Expo prebuild; no plist mutation' });
+} else if (mode === 'app') {
+  const info = JSON.parse(cp.execFileSync('plutil', ['-convert', 'json', '-o', '-', path.join(input, 'Info.plist')], { encoding: 'utf8' }));
+  assert.equal(info.CFBundleIdentifier, 'com.sideoutpr.app');
+  assert.equal(info.CFBundleShortVersionString, manifest.app.version);
+  assert.equal(String(info.CFBundleVersion), manifest.app.build);
+  assert(info.CFBundleSupportedPlatforms.includes('iPhoneSimulator'));
+  assert.equal(info.NSAppTransportSecurity?.NSAllowsLocalNetworking, true);
+  assert.equal(info.NSAppTransportSecurity?.NSAllowsArbitraryLoads, false);
+  const bundle = path.join(input, 'main.jsbundle');
+  assert(fs.existsSync(bundle), 'Release must contain its JS bundle; no Metro substitute.');
+  const bytes = fs.readFileSync(bundle);
+  assert(bytes.includes(Buffer.from(LOCAL_URL)), 'Only the runner-local backend must be embedded.');
+  assert(bytes.includes(Buffer.from(KEY)), 'Synthetic public key must be embedded.');
+  for (const forbidden of ['omdgfdbtymslljrrsiea.supabase.co', 'sb_publishable_FofnCfjBG9WxxBeDpBMfOQ_5SdDwGch', '__audit', 'startup-storage-fault-prelude']) {
+    assert(!bytes.includes(Buffer.from(forbidden)), `Audit runtime marker found: ${forbidden}`);
+  }
+  save(out, 'simulator-app.json', { observedAt: new Date().toISOString(), bundleId: info.CFBundleIdentifier,
+    version: info.CFBundleShortVersionString, build: String(info.CFBundleVersion), platforms: info.CFBundleSupportedPlatforms,
+    executableSha256: sha(path.join(input, info.CFBundleExecutable)), jsBundleSha256: sha(bundle),
+    source: process.env.SOURCE_SHA, distributionArtifact: false, localBackend: true, backend: LOCAL_URL,
+    ats: info.NSAppTransportSecurity });
+} else throw new Error('Unknown fresh metadata mode');
