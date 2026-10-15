@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "source": "6151ee8a341c0e5cffe1a7f4b95ded2f3d004ba7",
+  "purpose": "Isolated Apple screenshot data. Every identity and statistic is fictional; portraits come from the approved cast.",
+  "login": {
+    "handle": "lucasrivera",
+    "password": "Cancha2026!",
+    "email": "lucasrivera@jugadores.lalocal.app",
+    "userId": "a5311000-0000-4000-8000-000000000001",
+    "playerId": "a5310000-0000-4000-8000-000000000001",
+    "sessionId": "a5311000-0000-4000-8000-000000000002"
+  },
+  "routes": {
+    "Inicio": "sideout://inicio",
+    "Torneos": "sideout://torneos",
+    "Torneito": "UI: center Jugar button, then Torneito segment; optionally select Mateo Vega, Valeria Cruz and Andrés Lozano. Do not publish.",
+    "Ranking": "sideout://ranking",
+    "Canchas": "sideout://canchas",
+    "Perfil": "sideout://yo",
+    "Mesa": "sideout://e/a5310000-0000-4000-8000-000000000101/partidos"
+  },
+  "players": [
+    {"name":"Lucas Rivera","handle":"lucasrivera","portrait":"christian","rating":3.86,"dupr":3.75,"games":42,"wins":29,"titles":3,"form":0.084},
+    {"name":"Mateo Vega","handle":"mateovega","portrait":"neftali","rating":4.12,"dupr":4.00,"games":58,"wins":41,"titles":5,"form":0.042},
+    {"name":"Valeria Cruz","handle":"valeriacruz","portrait":"andrea","rating":3.82,"dupr":3.75,"games":36,"wins":24,"titles":2,"form":0.079},
+    {"name":"Andrés Lozano","handle":"andreslozano","portrait":"reinaldo","rating":3.68,"dupr":3.50,"games":31,"wins":19,"titles":1,"form":0.027},
+    {"name":"Camila Ríos","handle":"camilarios","portrait":"keishla","rating":3.74,"dupr":3.50,"games":39,"wins":25,"titles":2,"form":0.073},
+    {"name":"Diego Soler","handle":"diegosoler","portrait":"gilberto","rating":3.57,"dupr":3.50,"games":28,"wins":16,"titles":1,"form":0.018},
+    {"name":"Isabel Torres","handle":"isabeltorres","portrait":"cristina","rating":3.92,"dupr":3.75,"games":47,"wins":33,"titles":3,"form":0.053},
+    {"name":"Santiago Mora","handle":"santiagomora","portrait":"omar","rating":4.18,"dupr":4.00,"games":63,"wins":47,"titles":6,"form":0.064},
+    {"name":"Lucía Santana","handle":"luciasantana","portrait":"wanda","rating":3.61,"dupr":3.50,"games":33,"wins":19,"titles":1,"form":0.031},
+    {"name":"Daniel Ortiz","handle":"danielortiz","portrait":"ricardo","rating":3.45,"dupr":3.25,"games":24,"wins":13,"titles":1,"form":0.019},
+    {"name":"Paula Ramos","handle":"paularamos","portrait":"lourdes","rating":3.53,"dupr":3.50,"games":26,"wins":15,"titles":1,"form":0.041},
+    {"name":"Marina Suárez","handle":"marinasuarez","portrait":"marisol","rating":3.38,"dupr":3.25,"games":22,"wins":12,"titles":1,"form":0.036}
+  ],
+  "venues": [
+    {"name":"Costa Clara Pickleball","slug":"costa-clara","municipality":"Carolina","kind":"club","courts":4,"lat":18.4471,"lng":-66.0254,"cover":"coast.jpg","following":true,"followers":128,"players":86,"status":"approved","range":"activa","friends":3},
+    {"name":"Club Brisa Norte","slug":"brisa-norte","municipality":"Guaynabo","kind":"club","courts":6,"lat":18.3701,"lng":-66.1088,"cover":"club.jpg","following":true,"followers":94,"players":62,"status":"approved","range":"poca","friends":2},
+    {"name":"Parque del Almendro","slug":"parque-almendro","municipality":"San Juan","kind":"publica","courts":3,"lat":18.4118,"lng":-66.0612,"cover":"park.jpg","following":false,"followers":73,"players":48,"status":"approved","range":"activa","friends":1},
+    {"name":"Canchas Los Pinos","slug":"los-pinos","municipality":"Bayamón","kind":"publica","courts":2,"lat":18.3990,"lng":-66.1533,"cover":null,"following":false,"followers":0,"players":24,"status":"community","range":"poca","friends":1},
+    {"name":"Centro Deportivo Miramar","slug":"deportivo-miramar","municipality":"San Juan","kind":"complejo","courts":4,"lat":18.4527,"lng":-66.0772,"cover":null,"following":false,"followers":0,"players":38,"status":"community","range":"libre","friends":0}
+  ],
+  "events": [
+    {"number":101,"title":"Torneito de la costa","line1":"Torneito de","line2":"la costa","kind":"torneito","phase":"clasificatoria","venue":0,"offsetMinutes":-45,"teams":6},
+    {"number":102,"title":"Dobles del viernes","line1":"Dobles del","line2":"viernes","kind":"torneito","phase":"registro","venue":0,"offsetDays":1,"hourPR":18,"teams":4},
+    {"number":103,"title":"Copa Brisa Norte","line1":"Copa Brisa","line2":"Norte","kind":"copa","phase":"registro","venue":1,"offsetDays":3,"hourPR":9,"teams":5},
+    {"number":104,"title":"Jornada 3 de Liga de la costa","line1":"Liga de","line2":"la costa","kind":"liga","phase":"registro","venue":0,"offsetDays":5,"hourPR":18,"teams":6},
+    {"number":105,"title":"Mixto del Almendro","line1":"Mixto del","line2":"Almendro","kind":"especial","phase":"registro","venue":2,"offsetDays":7,"hourPR":17,"teams":4},
+    {"number":106,"title":"Copa de la costa","line1":"Copa de","line2":"la costa","kind":"copa","phase":"campeon","venue":0,"offsetDays":-8,"hourPR":17,"teams":4},
+    {"number":107,"title":"Jornada 2 de Liga de la costa","line1":"Liga de","line2":"la costa","kind":"liga","phase":"campeon","venue":0,"offsetDays":-5,"hourPR":18,"teams":4}
+  ],
+  "liveGames": [
+    {"a":0,"b":2,"status":"done","round":1,"score":[11,7]},
+    {"a":1,"b":3,"status":"done","round":1,"score":[9,11]},
+    {"a":0,"b":1,"status":"live","round":2,"court":1,"score":[6,4]},
+    {"a":2,"b":4,"status":"live","round":2,"court":2,"score":[8,6]},
+    {"a":3,"b":5,"status":"queued","round":2},
+    {"a":4,"b":5,"status":"queued","round":1},
+    {"a":0,"b":3,"status":"queued","round":3},
+    {"a":1,"b":4,"status":"queued","round":3},
+    {"a":2,"b":5,"status":"queued","round":3}
+  ],
+  "liveTable": [
+    {"team":0,"pos":1,"played":1,"w":1,"l":0,"pf":11,"pa":7},
+    {"team":3,"pos":2,"played":1,"w":1,"l":0,"pf":11,"pa":9},
+    {"team":4,"pos":3,"played":0,"w":0,"l":0,"pf":0,"pa":0},
+    {"team":5,"pos":3,"played":0,"w":0,"l":0,"pf":0,"pa":0},
+    {"team":1,"pos":5,"played":1,"w":0,"l":1,"pf":9,"pa":11},
+    {"team":2,"pos":6,"played":1,"w":0,"l":1,"pf":7,"pa":11}
+  ]
+}

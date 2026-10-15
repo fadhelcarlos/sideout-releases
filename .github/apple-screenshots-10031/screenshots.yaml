@@ -1,0 +1,104 @@
+appId: com.sideoutpr.app
+name: Seven authentic native iOS store screenshots
+---
+- launchApp:
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible: '^Ya tengo cuenta$'
+    timeout: 30000
+- tapOn: '^Ya tengo cuenta$'
+- extendedWaitUntil:
+    visible: '^usuario$'
+    timeout: 30000
+- tapOn: '^usuario$'
+- inputText: lucasrivera
+- tapOn: Contraseña
+- inputText: Cancha2026!
+- hideKeyboard
+- tapOn:
+    text: Entrar
+    index: 1
+- extendedWaitUntil:
+    visible: '^Yo$'
+    timeout: 30000
+- assertNotVisible: Esto es sideout
+- openLink: sideout://inicio
+- extendedWaitUntil:
+    visible: '.*Costa Clara.*'
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- runScript:
+    file: capture.js
+    env:
+      SHOT: 01-inicio
+- openLink: sideout://torneos
+- extendedWaitUntil:
+    visible: '.*Torneito de la costa.*'
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- runScript:
+    file: capture.js
+    env:
+      SHOT: 02-torneos
+- tapOn: '^Jugar$'
+- extendedWaitUntil:
+    visible: '^Torneito$'
+    timeout: 10000
+- tapOn: '^Torneito$'
+- tapOn: '.*Pierdes y sales.*'
+- scrollUntilVisible:
+    element:
+      text: '.*Así se juega.*'
+    direction: DOWN
+    centerElement: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- runScript:
+    file: capture.js
+    env:
+      SHOT: 03-torneito
+- tapOn: '^Cerrar$'
+- openLink: sideout://ranking
+- extendedWaitUntil:
+    visible: '.*Lucas Rivera.*'
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- runScript:
+    file: capture.js
+    env:
+      SHOT: 04-ranking
+- openLink: sideout://canchas
+- extendedWaitUntil:
+    visible: '.*Costa Clara.*'
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- runScript:
+    file: capture.js
+    env:
+      SHOT: 05-canchas
+- openLink: sideout://yo
+- extendedWaitUntil:
+    visible: '.*Lucas Rivera.*'
+    timeout: 30000
+- assertVisible: '.*PRIME.*'
+- waitForAnimationToEnd:
+    timeout: 5000
+- runScript:
+    file: capture.js
+    env:
+      SHOT: 06-perfil
+- openLink: sideout://e/a5310000-0000-4000-8000-000000000101/partidos
+- extendedWaitUntil:
+    visible: '.*Ronda 1.*'
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- runScript:
+    file: capture.js
+    env:
+      SHOT: 07-mesa

@@ -1,0 +1,95 @@
+{
+  "source": "6151ee8a341c0e5cffe1a7f4b95ded2f3d004ba7",
+  "assets": [
+    {
+      "file": "people/christian.jpg",
+      "source": "approved-cast/christian.jpg",
+      "sha256": "1665c9d1e3217dd28f656ae65219994e0d180b5eaad82ab40def0cbedf280666",
+      "bytes": 48901
+    },
+    {
+      "file": "people/neftali.jpg",
+      "source": "approved-cast/neftali.jpg",
+      "sha256": "cb425c59a7bcbfb372075e3c2faf4777d9c8664e8408a27643e7cf0353fdfb49",
+      "bytes": 49254
+    },
+    {
+      "file": "people/andrea.jpg",
+      "source": "approved-cast/andrea.jpg",
+      "sha256": "441c415f77f26b2b588155e4da0179483b67b11da7bbfde0f02ab7d31b1d7d05",
+      "bytes": 52466
+    },
+    {
+      "file": "people/reinaldo.jpg",
+      "source": "approved-cast/reinaldo.jpg",
+      "sha256": "62e9f1c4af0b4874d912d8592ee9727fc82c9942bc7a41e9d7f5dbdce6a54d56",
+      "bytes": 55258
+    },
+    {
+      "file": "people/keishla.jpg",
+      "source": "approved-cast/keishla.jpg",
+      "sha256": "e69d51b33a6b1f0dccf1b3b3d0cf9be9ce4f957fb0b7c07c0e9d2656e641097b",
+      "bytes": 53765
+    },
+    {
+      "file": "people/gilberto.jpg",
+      "source": "approved-cast/gilberto.jpg",
+      "sha256": "51022d385a03c6a5f0adc61b83241627ad3e530b7c206d2408a733dfc083750c",
+      "bytes": 50061
+    },
+    {
+      "file": "people/cristina.jpg",
+      "source": "approved-cast/cristina.jpg",
+      "sha256": "d55304609e1a83f8dea62dabbe0191c1bbbfc5ca4f6b8bf0e7ca83cde1ce3114",
+      "bytes": 51796
+    },
+    {
+      "file": "people/omar.jpg",
+      "source": "approved-cast/omar.jpg",
+      "sha256": "5a10a06ad49990d24ea7fee3e9c29625cd737ca415f580247f335b20f8841cfc",
+      "bytes": 53940
+    },
+    {
+      "file": "people/wanda.jpg",
+      "source": "approved-cast/wanda.jpg",
+      "sha256": "f9ae8216218aa5526d662571ea425b84079b1b01dd3c5a6477cd46d4a5a06c21",
+      "bytes": 59168
+    },
+    {
+      "file": "people/ricardo.jpg",
+      "source": "approved-cast/ricardo.jpg",
+      "sha256": "e3e24383fdf71dacd2018d2f61875d3268b42e36be6da0e2f42ecdd14a064e04",
+      "bytes": 61984
+    },
+    {
+      "file": "people/lourdes.jpg",
+      "source": "approved-cast/lourdes.jpg",
+      "sha256": "34c95a22210c01dade798370988739e360d8f32dbcfd5b7fc0e04c42698858f2",
+      "bytes": 64028
+    },
+    {
+      "file": "people/marisol.jpg",
+      "source": "approved-cast/marisol.jpg",
+      "sha256": "9712855ab0098a99457170c7c424877e9f61ca02d895b859e603d20679ec4af6",
+      "bytes": 48794
+    },
+    {
+      "file": "courts/coast.jpg",
+      "source": "inherited-synthetic-court/mkt_iv-cover.jpg",
+      "sha256": "201f831c5e6b96138bfa348146651d6cb7353084f3deb25eb254b75ef7789b15",
+      "bytes": 596403
+    },
+    {
+      "file": "courts/club.jpg",
+      "source": "inherited-synthetic-court/mkt_bp-cover.jpg",
+      "sha256": "c9894c8033a3446f90a540b1c29bced5759eaf312c2722e3b4dfe245e2e08295",
+      "bytes": 497750
+    },
+    {
+      "file": "courts/park.jpg",
+      "source": "inherited-synthetic-court/mkt_cp-cover.jpg",
+      "sha256": "35d11e57b6b261cc3461f4f568bd66fd7212229381ec7b73ed79542d5d44f37e",
+      "bytes": 548072
+    }
+  ]
+}
