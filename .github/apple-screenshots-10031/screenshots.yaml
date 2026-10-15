@@ -41,7 +41,7 @@ name: Seven authentic native iOS store screenshots
     env:
       ROUTE: sideout://torneos
 - extendedWaitUntil:
-    visible: '.*Torneito de la costa.*'
+    visible: '.*Dobles del viernes.*'
     timeout: 30000
 - waitForAnimationToEnd:
     timeout: 5000
