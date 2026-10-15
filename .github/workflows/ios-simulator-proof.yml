@@ -11,7 +11,7 @@ on:
         required: true
         default: build
         type: choice
-        options: [build, capture]
+        options: [build, capture, package]
       app_artifact_id:
         description: Required only for capture
         required: false
@@ -21,6 +21,7 @@ permissions:
   actions: read
 jobs:
   simulator:
+    if: inputs.phase != 'package'
     runs-on: macos-26
     env:
       SOURCE_SHA: ${{ inputs.source_sha }}
@@ -86,4 +87,30 @@ jobs:
             !${{ runner.temp }}/apple-screenshots-capture/inherited
             !${{ runner.temp }}/apple-screenshots-capture/app
             !${{ runner.temp }}/apple-screenshots-capture/source-artifact.zip
+          if-no-files-found: error
+  delivery:
+    if: inputs.phase == 'package'
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_SHA: ${{ inputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify exact source
+        run: node .github/apple-screenshots-10031/verify.cjs input
+      - name: Install PNG codec
+        run: python -m pip install Pillow==12.3.0
+      - name: Preserve originals and verify pixel-identical RGB copies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/apple-screenshots-10031/package.py --output "$RUNNER_TEMP/apple-screenshots-delivery"
+      - name: Publish seven screenshots and source provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: apple-native-screenshots-10031-delivery-${{ github.run_id }}
+          path: ${{ runner.temp }}/apple-screenshots-delivery
           if-no-files-found: error
